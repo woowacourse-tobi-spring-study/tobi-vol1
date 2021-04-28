@@ -10,10 +10,9 @@ import java.sql.SQLException;
 
 public class UserDao {
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:13306/mydb?useSSL=false&serverTimezone=UTC", "root", "root");
+        Connection connection = getConnection();
 
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO USERS(id, name, password) VALUES (?,?,?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (id, name, password) VALUES (?,?,?)");
         preparedStatement.setString(1, user.getId());
         preparedStatement.setString(2, user.getName());
         preparedStatement.setString(3, user.getPassword());
@@ -25,10 +24,9 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:13306/mydb?useSSL=false&serverTimezone=UTC");
+        Connection connection = getConnection();
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM USERS WHERE id = ?");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
         preparedStatement.setString(1, id);
 
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -43,5 +41,10 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection("jdbc:mysql://localhost:13306/mydb?useSSL=false&serverTimezone=UTC&characterEncoding=utf8", "root", "root");
     }
 }
