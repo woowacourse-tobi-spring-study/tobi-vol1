@@ -3,12 +3,11 @@ package springbook.user.dao;
 import springbook.user.domain.User;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDao {
+public abstract class UserDao {
     public void add(User user) throws ClassNotFoundException, SQLException {
         Connection connection = getConnection();
 
@@ -43,8 +42,15 @@ public class UserDao {
         return user;
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection("jdbc:mysql://localhost:13306/mydb?useSSL=false&serverTimezone=UTC&characterEncoding=utf8", "root", "root");
+    public void delete() throws SQLException, ClassNotFoundException {
+        Connection connection = getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users");
+        preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        connection.close();
     }
+
+    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }

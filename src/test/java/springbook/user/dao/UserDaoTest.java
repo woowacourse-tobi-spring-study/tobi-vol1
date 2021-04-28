@@ -10,11 +10,13 @@ class UserDaoTest {
     @Test
     void add() throws SQLException, ClassNotFoundException {
         //given
-        UserDao userDao = new UserDao();
+        UserDao userDao = new BanminUserDao();
+
+        userDao.delete();
 
         User user = new User();
         user.setId("1");
-        user.setName("wedge");
+        user.setName("웨웨지지");
         user.setPassword("wedge123");
 
         //when
