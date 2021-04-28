@@ -10,7 +10,7 @@ class UserDaoTest {
     @Test
     void add() throws SQLException, ClassNotFoundException {
         //given
-        UserDao userDao = new BaeminUserDao();
+        UserDao userDao = new UserDao(new BaeminSimpleConnectionMaker());
 
         userDao.delete();
 
