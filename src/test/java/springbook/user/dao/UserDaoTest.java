@@ -10,7 +10,7 @@ class UserDaoTest {
     @Test
     void add() throws SQLException, ClassNotFoundException {
         //given
-        UserDao userDao = new BanminUserDao();
+        UserDao userDao = new BaeminUserDao();
 
         userDao.delete();
 
