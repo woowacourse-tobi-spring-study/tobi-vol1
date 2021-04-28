@@ -1,13 +1,23 @@
 package springbook.dao.user;
 
+import springbook.dao.connection.ConnectionMaker;
 import springbook.domain.user.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
 
+    private ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public void addUser(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.makeConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO USERS (ID, NAME, PASSWORD) VALUES (?, ?, ?)");
         preparedStatement.setString(1, user.getId());
         preparedStatement.setString(2, user.getName());
@@ -17,13 +27,8 @@ public class UserDao {
         connection.close();
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection("jdbc:mysql://localhost:13306/tobi", "root", "root");
-    }
-
     public User getUser(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.makeConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM USERS WHERE ID = ?");
         preparedStatement.setString(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
