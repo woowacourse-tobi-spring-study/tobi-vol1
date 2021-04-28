@@ -7,13 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import springbook.user.domain.User;
 
-public class UserDao {
+public abstract class UserDao {
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager
-                .getConnection("jdbc:mysql://localhost/tobi_db", "root", "root");
-
+        Connection c = getConnection();
         PreparedStatement ps = c.prepareStatement(
                 "INSERT INTO users(id, name, password) VALUES (?, ?, ?)");
         ps.setString(1, user.getId());
@@ -27,10 +24,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager
-                .getConnection("jdbc:mysql://localhost/tobi_db", "root", "root");
-
+        Connection c = getConnection();
         PreparedStatement ps = c.prepareStatement(
                 "SELECT * FROM users WHERE id = ?");
         ps.setString(1, id);
@@ -49,4 +43,6 @@ public class UserDao {
 
         return user;
     }
+
+    public abstract Connection getConnection() throws SQLException, ClassNotFoundException;
 }
