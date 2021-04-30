@@ -4,17 +4,19 @@ import user.domain.UserDao;
 
 import java.sql.SQLException;
 
-public class Main {
+public class UserDaoTest {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao dao = new UserDao(new SimpleConnectionMaker());
+        UserDao dao = new DaoFactory().userDao();
         /*
-        클라이언트는 자기가 사용해야할 UserDao의 세부전략인 ConnectionMaker의 구현 클래스를 선택해야한다
-        선택한 클래스의 오브젝트를 통해 UserDao와 런타임 연결관계를 맺어줄 수 있다
+        제어의 역전 적용
+        직접 자신이 어떤 ConnectionMaker 구현 클래스를 사용해 UserDao를 만드는지 결정하는 것이 아님
+        DaoFactory가 찍어주는 대로 UserDao는 생성이 된다
+        UserDaoTest도 사용할 오브젝트를 DaoFactory가 찍어주는 대로 사용해야함
          */
 
         User user = new User();
-        user.setId("inject");
-        user.setName("inject");
+        user.setId("DI");
+        user.setName("DI");
         user.setPassword("applied");
 
         dao.add(user);
