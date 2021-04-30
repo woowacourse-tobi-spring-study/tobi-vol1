@@ -5,13 +5,12 @@ import java.sql.*;
 public class UserDao {
     private ConnectionMaker connectionMaker;
 
-    public UserDao() {
-        connectionMaker = new SimpleConnectionMaker();
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
         /*
-        이런 방식은 내부 구현체에 의존적이기 떄문에 확장에 한계가 있음
-        UserDao가 DB커넥션을 담당하는 클래스에 대해 "너무 많이 알고있음"!!
-        DB 커넥션을 제공하는 클래스에 대한 구체적인 정보는 제거했지만,
-        초기에 한 반 어떤 클래스의 오브젝트를 사용할지 결정하는 생성자 코드는 남아있다!
+        클래스 사이에 관계가 만들어 진다는 것은 한 클래스가 인터페이스 없이 다른 클래스를 직접 사용한다는 뜻
+        클래스가 아닌, 오브젝트-오브젝트 연결 관계가 설정이 되어야 함
+        UserDao의 생성자에서 Connection을 생성하는 것은 얘의 역할이 아니야
         */
     }
 
