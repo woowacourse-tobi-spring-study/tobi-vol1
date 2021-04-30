@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SimpleConnectionMaker {
+public class SimpleConnectionMaker implements ConnectionMaker {
+    @Override
     public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
@@ -13,5 +14,5 @@ public class SimpleConnectionMaker {
 }
 
 /*
-DB 커넥션 생성 기능을 독립시킨 클래스 생성!
+DB 커넥션 생성 기능을 독립시킨 콘크리트 클래스 생성!
 */

@@ -3,18 +3,20 @@ package user.domain;
 import java.sql.*;
 
 public class UserDao {
-    private SimpleConnectionMaker simpleConnectionMaker;
+    private ConnectionMaker connectionMaker;
 
     public UserDao() {
-        simpleConnectionMaker = new SimpleConnectionMaker();
+        connectionMaker = new SimpleConnectionMaker();
         /*
         이런 방식은 내부 구현체에 의존적이기 떄문에 확장에 한계가 있음
         UserDao가 DB커넥션을 담당하는 클래스에 대해 "너무 많이 알고있음"!!
+        DB 커넥션을 제공하는 클래스에 대한 구체적인 정보는 제거했지만,
+        초기에 한 반 어떤 클래스의 오브젝트를 사용할지 결정하는 생성자 코드는 남아있다!
         */
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.makeNewConnection();
+        Connection c = connectionMaker.makeNewConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?, ?, ?)");
@@ -29,7 +31,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.makeNewConnection();
+        Connection c = connectionMaker.makeNewConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "select * from users where id = ?");
