@@ -5,9 +5,15 @@ import user.domain.User;
 import java.sql.*;
 
 public abstract class UserDao {
+    private SimpleConnectionMaker simpleConnectionMaker;
+
+    public UserDao() {
+        simpleConnectionMaker = new SimpleConnectionMaker();
+    }
+
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection con = getConnection();
-;
+        Connection con = simpleConnectionMaker.makeNewConnection();
+
         PreparedStatement ps = con.prepareStatement(
             "insert into users(id, name, password) values(?, ?, ?)");
         ps.setString(1, user.getId());
@@ -21,7 +27,7 @@ public abstract class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection con = getConnection();
+        Connection con = simpleConnectionMaker.makeNewConnection();
 
         PreparedStatement ps = con.prepareStatement(
             "select * from users where id = ?");
@@ -42,10 +48,4 @@ public abstract class UserDao {
     }
 
     public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
-
-//    private Connection getConnection() throws ClassNotFoundException, SQLException {
-//        Class.forName("org.h2.Driver");
-//        Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/springbook", "sa", "");
-//        return con;
-//    }
 }
