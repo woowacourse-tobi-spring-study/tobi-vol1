@@ -1,3 +1,4 @@
+import dao.MysqlUserDao;
 import dao.UserDao;
 import domain.User;
 
@@ -5,7 +6,7 @@ import java.sql.SQLException;
 
 public class MainApplication {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        UserDao dao = new UserDao();
+        UserDao dao = new MysqlUserDao();
 
         User user = new User();
         user.setId("koda");
