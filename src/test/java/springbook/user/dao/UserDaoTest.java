@@ -12,12 +12,12 @@ class UserDaoTest {
     void add() throws SQLException, ClassNotFoundException {
         // given
         User user = new User();
-        user.setId("woowa");
+        user.setId("woowa1");
         user.setName("우형이");
         user.setPassword("1234");
 
         //when
-        userDao = new UserDao(new WoowaConnectionMaker());
+        userDao = new DaoFactory().userDao();
 
         //then
         userDao.add(user);
