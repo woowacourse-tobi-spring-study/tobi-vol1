@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MysqlUserDao extends UserDao {
+public class MysqlUserDao {
 
     //@Override
     public Connection getConnection() throws ClassNotFoundException, SQLException {
