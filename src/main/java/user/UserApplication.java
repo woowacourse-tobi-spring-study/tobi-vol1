@@ -1,5 +1,6 @@
 package user;
 
+import user.dao.DaoFactory;
 import user.dao.NUserDao;
 import user.dao.UserDao;
 import user.domain.User;
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 
 public class UserApplication {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        UserDao dao = new NUserDao();
+        UserDao dao = new DaoFactory().userDao();
 
         User user = new User();
         user.setId("xrabcde");
