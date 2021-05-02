@@ -10,11 +10,11 @@ import java.sql.*;
  * 2. 파라미터로 넘어온 사용자 정보를 Statement에 바인딩시키고, Statement에 담긴 SQL을 디비를 통해 실행시키는 방법
  * 3. 작업이 끝나면 사용한 리소스인 Statement와 커넥션 객체를 닫아주는 것.
  */
-public abstract class UserDao {
+public class UserDao {
     private ConnectionMaker connectionMaker;
 
-    public UserDao() {
-        connectionMaker = new WoowaConnectionMaker();
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
