@@ -1,13 +1,13 @@
 package springbook.user;
 
-import springbook.user.dao.RyanUserDao;
+import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
 
 public class Application {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        RyanUserDao dao = new RyanUserDao();
+        UserDao dao = new UserDao();
 
         User user = new User();
         user.setId("whiteship");
