@@ -11,9 +11,14 @@ import java.sql.*;
  * 3. 작업이 끝나면 사용한 리소스인 Statement와 커넥션 객체를 닫아주는 것.
  */
 public abstract class UserDao {
+    private ConnectionMaker connectionMaker;
+
+    public UserDao() {
+        connectionMaker = new WoowaConnectionMaker();
+    }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = connectionMaker.makeConnection();
         PreparedStatement preparedStatement = c.prepareStatement(
                 "insert into users(id, name, password) values(?, ?, ?)");
         preparedStatement.setString(1, user.getId());
@@ -27,7 +32,7 @@ public abstract class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = connectionMaker.makeConnection();
         PreparedStatement preparedStatement = c.prepareStatement(
                 "select * from users where id = ?"
         );
@@ -46,6 +51,4 @@ public abstract class UserDao {
 
         return user;
     }
-
-    protected abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }

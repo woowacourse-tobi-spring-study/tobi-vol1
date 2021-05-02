@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class WoowaUserDao extends UserDao{
+public class WoowaConnectionMaker implements ConnectionMaker{
     @Override
-    protected Connection getConnection() throws ClassNotFoundException, SQLException {
+    public Connection makeConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
         Connection c = DriverManager.getConnection(
                 "jdbc:mysql://localhost/tobi","root","root"
