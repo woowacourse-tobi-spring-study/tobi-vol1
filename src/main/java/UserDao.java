@@ -1,10 +1,17 @@
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
+    private ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public void add(User user) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3307/springbook?useSSL=false&serverTimezone=UTC&useUnicode=true&charEncoding=UTF-8", "root", "root");
+        Connection c = connectionMaker.makeConnection();
         PreparedStatement ps = c.prepareStatement(
                 "INSERT INTO users(id, name, password) values(?,?,?)");
         ps.setString(1, user.getId());
@@ -19,9 +26,7 @@ public class UserDao {
 
 
     public User get(String id) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3307/springbook?useSSL=false&serverTimezone=UTC&useUnicode=true&charEncoding=UTF-8", "root", "root");
+        Connection c = connectionMaker.makeConnection();
         PreparedStatement ps = c.prepareStatement(
                 "SELECT * FROM users WHERE id =?");
         ps.setString(1, id);
@@ -39,5 +44,16 @@ public class UserDao {
 
 
         return user;
+    }
+
+    public void deleteAll() throws SQLException, ClassNotFoundException {
+        Connection c = connectionMaker.makeConnection();
+        PreparedStatement ps = c.prepareStatement(
+                "DELETE FROM users");
+
+        ps.executeUpdate();
+
+        ps.close();
+        c.close();
     }
 }

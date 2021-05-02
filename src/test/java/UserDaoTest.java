@@ -1,13 +1,13 @@
 import java.sql.SQLException;
 
-public class Application {
+public class UserDaoTest {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao dao = new UserDao();
+        UserDao dao = new DaoFactory().userDao();
 
         User user = new User();
-        user.setId("wannte6");
-        user.setName("완태");
+        user.setId("1");
+        user.setName("wannte");
         user.setPassword("1234");
 
 
@@ -21,5 +21,9 @@ public class Application {
         System.out.println(user2.getPassword());
 
         System.out.println(user2.getId() + " 조회 성공");
+
+        dao.deleteAll();
+
+        System.out.println("초기화 성공");
     }
 }
