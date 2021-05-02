@@ -1,16 +1,14 @@
 import dao.ConnectionMaker;
 import dao.MysqlConnection;
 import dao.UserDao;
+import domain.DaoFactory;
 import domain.User;
 
 import java.sql.SQLException;
 
 public class UserDaoTest {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-
-        ConnectionMaker connectionMaker = new MysqlConnection();
-
-        UserDao dao = new UserDao(connectionMaker);
+        UserDao dao = new DaoFactory().userDao();
 
         User user = new User();
         user.setId("koda");
