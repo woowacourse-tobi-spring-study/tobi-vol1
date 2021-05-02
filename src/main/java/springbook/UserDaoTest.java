@@ -1,16 +1,14 @@
 package springbook;
 
 import springbook.user.User;
-import springbook.user.dao.ConnectionMaker;
-import springbook.user.dao.SimpleConnectionMaker;
+import springbook.user.dao.DaoFactory;
 import springbook.user.dao.UserDao;
 
 import java.sql.SQLException;
 
 public class UserDaoTest {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        ConnectionMaker connectionMaker = new SimpleConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
+        UserDao userDao = DaoFactory.userDao();
 
         User user = new User();
         user.setId("whiteship");
