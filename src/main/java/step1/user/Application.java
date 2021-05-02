@@ -1,5 +1,6 @@
 package step1.user;
 
+import step1.user.dao.NUserDao;
 import step1.user.dao.UserDao;
 import step1.user.domain.User;
 
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 public class Application {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao dao = new UserDao();
+        UserDao dao = new NUserDao();
 
         User user = new User();
         user.setId("whiteship");
