@@ -6,15 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import springbook.user.domain.User;
 
-public class UserDao {
+public final class UserDao {
 
     private final ConnectionMaker connectionMaker;
 
-    public UserDao(ConnectionMaker simpleConnectionMaker) {
+    public UserDao(final ConnectionMaker simpleConnectionMaker) {
         this.connectionMaker = simpleConnectionMaker;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
+    public void add(final User user) throws ClassNotFoundException, SQLException {
         Connection c = connectionMaker.makeConnection();
 
         PreparedStatement ps = c
@@ -29,7 +29,7 @@ public class UserDao {
         c.close();
     }
 
-    public User get(String id) throws ClassNotFoundException, SQLException {
+    public User get(final String id) throws ClassNotFoundException, SQLException {
         Connection c = connectionMaker.makeConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");

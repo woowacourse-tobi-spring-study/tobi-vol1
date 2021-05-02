@@ -1,6 +1,7 @@
 package springbook.user;
 
 import java.sql.SQLException;
+import springbook.user.dao.DaoFactory;
 import springbook.user.dao.NConnectionMaker;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
@@ -8,7 +9,7 @@ import springbook.user.domain.User;
 public class Application {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new UserDao(new NConnectionMaker());
+        UserDao userDao = new DaoFactory().userDao();
 
         User user = new User();
         user.setId("whiteship");
