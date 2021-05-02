@@ -2,6 +2,7 @@ package step1.user;
 
 import step1.user.dao.ConnectionMaker;
 import step1.user.dao.DConnectionMaker;
+import step1.user.dao.DaoFactory;
 import step1.user.dao.UserDao;
 import step1.user.domain.User;
 
@@ -10,9 +11,7 @@ import java.sql.SQLException;
 public class Application {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        ConnectionMaker connectionMaker = new DConnectionMaker();
-
-        UserDao dao = new UserDao(connectionMaker);
+        UserDao dao = new DaoFactory().userDao();
 
         User user = new User();
         user.setId("whiteship");
