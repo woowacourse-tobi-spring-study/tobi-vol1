@@ -7,9 +7,12 @@ import dao.UserDao;
 public class DaoFactory {
 
     public UserDao userDao() {
-        ConnectionMaker connectionMaker = new MysqlConnection();
-        UserDao dao = new UserDao(connectionMaker);
-
+        UserDao dao = new UserDao(connectionMaker());
         return dao;
+    }
+
+    //추후 여러 DAO가 만들었을 때 중복 제거를 위한 메소드 분리
+    public ConnectionMaker connectionMaker() {
+        return new MysqlConnection();
     }
 }

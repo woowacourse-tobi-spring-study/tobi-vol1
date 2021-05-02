@@ -1,5 +1,3 @@
-import dao.ConnectionMaker;
-import dao.MysqlConnection;
 import dao.UserDao;
 import domain.DaoFactory;
 import domain.User;
