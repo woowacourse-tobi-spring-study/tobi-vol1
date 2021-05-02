@@ -2,8 +2,18 @@ package user.dao;
 
 public class DaoFactory {
     public UserDao userDao() {
-        ConnectionMaker connectionMaker = new DConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
-        return userDao;
+        return new UserDao(connectionMaker());
+    }
+
+    public AccountDao accountDao() {
+        return new AccountDao(connectionMaker());
+    }
+
+    public MessageDao messageDao() {
+        return new MessageDao(connectionMaker());
+    }
+
+    public ConnectionMaker connectionMaker() {
+        return new DConnectionMaker();
     }
 }
