@@ -1,12 +1,12 @@
 import java.sql.SQLException;
-import springbook.user.dao.NUserDao;
+import springbook.user.dao.DConnectionMaker;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
 public class Application {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new NUserDao();
+        UserDao userDao = new UserDao(new DConnectionMaker());
 
         User user = new User();
         user.setId("12");
