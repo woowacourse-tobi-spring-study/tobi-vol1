@@ -82,7 +82,6 @@ public class App {
 }
 ```
 
-둘의 차이: https://hojak99.tistory.com/347
 
 예제)
 
