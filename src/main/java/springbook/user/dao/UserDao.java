@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao {
     private final SimpleConnectionMaker simpleConnectionMaker;
@@ -46,6 +48,26 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    public List<User> getAll() throws ClassNotFoundException, SQLException {
+        Connection connection = simpleConnectionMaker.makeNewConnection();
+
+        ArrayList<User> users = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getString("id"));
+                user.setName(resultSet.getString("name"));
+                user.setPassword(resultSet.getString("password"));
+
+                users.add(user);
+            }
+        }
+        return users;
     }
 
     public void delete() throws SQLException, ClassNotFoundException {
