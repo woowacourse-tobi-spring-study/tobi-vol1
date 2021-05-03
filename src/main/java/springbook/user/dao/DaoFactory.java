@@ -1,7 +1,12 @@
 package springbook.user.dao;
 
-public final class DaoFactory {
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+public class DaoFactory {
+
+    @Bean
     public UserDao userDao() {
         return new UserDao(getConnectionMaker());
     }
@@ -14,7 +19,8 @@ public final class DaoFactory {
         return new MessageDao(getConnectionMaker());
     }
 
-    private ConnectionMaker getConnectionMaker() {
+    @Bean
+    public ConnectionMaker getConnectionMaker() {
         ConnectionMaker connectionMaker = new NConnectionMaker();
         return connectionMaker;
     }
