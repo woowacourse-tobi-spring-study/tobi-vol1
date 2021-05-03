@@ -70,13 +70,18 @@ public class Mustang implements Car {
     }
 }
 
+public class CarFactory {
+    public Car car(String name){
+        if(name == "Mustang"){
+            return new Mustang();
+        }
+    }
+}
+
 public class App {
     public static void main(String[] args) {
         String input = //some logic
-        Car car;
-        if (input == "Mustang") {
-            car = new Mustang();
-        }
+        Car car = new CarFactory.whichCar(input);
         car.speed();
     }
 }
