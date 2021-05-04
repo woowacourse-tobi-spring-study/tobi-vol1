@@ -59,30 +59,46 @@ public class Mustang extends Car {
 > Example
 
 ```java
-public interface Car {
-    void speed();
+public interface CarAbstractFactory{
+  public Car createCar();
 }
 
-public class Mustang implements Car {
-    @Override
-    public void speed() {
-        //implementation
-    }
+public class MustangFactory implements CarAbstractFactory{
+  @Override
+  public Car createCar(){
+    return new Mustang();
+  }
 }
 
-public class CarFactory {
-    public Car car(String name){
-        if(name == "Mustang"){
-            return new Mustang();
-        }
-    }
+public class WranglerFactory implements CarAbstractFactory{
+  @Override
+  public Car createCar(){
+    return new Car();
+  }
+}
+
+public class MFactory implements CarAbstractFactory{
+  @Override
+  public Car createCar(){
+    return new M();
+  }
+}
+
+public class CarFactory{
+  public static Car getCar(CarAbstractFactory carAbstractFactory){
+    return carAbstractFactory.createCar();
+  }
 }
 
 public class App {
     public static void main(String[] args) {
-        String input = //some logic
-        Car car = new CarFactory.whichCar(input);
-        car.speed();
+        Car mustang = CarFactory.getCar(new MustangFactory());
+        Car wrangler = CarFactory.getCar(new WranglerFactory());
+        Car m = CarFactory.getCar(new MFactory());
+  
+        System.out.println(car1.speed());
+        System.out.println(car2.speed());
+        System.out.println(car3.speed());
     }
 }
 ```
