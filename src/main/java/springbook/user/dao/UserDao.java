@@ -10,16 +10,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
+    private static UserDao INSTANCE;
+
+    private Connection currentConnection;
+    private User currentUser;
+
     private final SimpleConnectionMaker simpleConnectionMaker;
 
-    public UserDao(SimpleConnectionMaker simpleConnectionMaker) {
+    private UserDao(SimpleConnectionMaker simpleConnectionMaker) {
         this.simpleConnectionMaker = simpleConnectionMaker;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = simpleConnectionMaker.makeNewConnection();
+    public static synchronized UserDao getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new UserDao(new BaeminSimpleConnectionMaker());
+        }
+        return INSTANCE;
+    }
 
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (id, name, password) VALUES (?,?,?)");
+
+    public void add(User user) throws ClassNotFoundException, SQLException {
+        this.currentConnection = simpleConnectionMaker.makeNewConnection();
+
+        PreparedStatement preparedStatement = currentConnection.prepareStatement("INSERT INTO users (id, name, password) VALUES (?,?,?)");
         preparedStatement.setString(1, user.getId());
         preparedStatement.setString(2, user.getName());
         preparedStatement.setString(3, user.getPassword());
@@ -27,13 +40,13 @@ public class UserDao {
         preparedStatement.execute();
 
         preparedStatement.close();
-        connection.close();
+        currentConnection.close();
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection connection = simpleConnectionMaker.makeNewConnection();
+        this.currentConnection = simpleConnectionMaker.makeNewConnection();
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+        PreparedStatement preparedStatement = currentConnection.prepareStatement("SELECT * FROM users WHERE id = ?");
         preparedStatement.setString(1, id);
 
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -42,20 +55,21 @@ public class UserDao {
         user.setId(resultSet.getString("id"));
         user.setName(resultSet.getString("name"));
         user.setPassword(resultSet.getString("password"));
+        this.currentUser = user;
 
         resultSet.close();
         preparedStatement.close();
-        connection.close();
+        currentConnection.close();
 
-        return user;
+        return this.currentUser;
     }
 
     public List<User> getAll() throws ClassNotFoundException, SQLException {
-        Connection connection = simpleConnectionMaker.makeNewConnection();
+        this.currentConnection = simpleConnectionMaker.makeNewConnection();
 
         ArrayList<User> users = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");
+        try (PreparedStatement preparedStatement = currentConnection.prepareStatement("SELECT * FROM users");
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -71,12 +85,12 @@ public class UserDao {
     }
 
     public void delete() throws SQLException, ClassNotFoundException {
-        Connection connection = simpleConnectionMaker.makeNewConnection();
+        this.currentConnection = simpleConnectionMaker.makeNewConnection();
 
-        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users");
+        PreparedStatement preparedStatement = currentConnection.prepareStatement("DELETE FROM users");
         preparedStatement.executeUpdate();
 
         preparedStatement.close();
-        connection.close();
+        currentConnection.close();
     }
 }
