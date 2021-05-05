@@ -1,12 +1,13 @@
-package dao;
+package dao.dumpDao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SimpleConnectionMaker {
+public class DConnectionMaker implements ConnectionMaker {
 
-    public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
+    @Override
+    public Connection makeConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
         Connection c = DriverManager.getConnection(
                 "jdbc:mysql://localhost:13306/tobi_spring", "root", "root");
