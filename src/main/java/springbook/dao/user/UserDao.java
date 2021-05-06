@@ -1,8 +1,8 @@
 package springbook.dao.user;
 
-import springbook.dao.connection.ConnectionMaker;
 import springbook.domain.user.User;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,14 +10,10 @@ import java.sql.SQLException;
 
 public class UserDao {
 
-    private ConnectionMaker connectionMaker;
+    private DataSource dataSource;
 
-    public UserDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
-    }
-
-    public void addUser(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = connectionMaker.makeConnection();
+    public void addUser(User user) throws SQLException {
+        Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO USERS (ID, NAME, PASSWORD) VALUES (?, ?, ?)");
         preparedStatement.setString(1, user.getId());
         preparedStatement.setString(2, user.getName());
@@ -27,8 +23,8 @@ public class UserDao {
         connection.close();
     }
 
-    public User getUser(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = connectionMaker.makeConnection();
+    public User getUser(String id) throws SQLException {
+        Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM USERS WHERE ID = ?");
         preparedStatement.setString(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -41,5 +37,9 @@ public class UserDao {
         preparedStatement.close();
         connection.close();
         return user;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }
