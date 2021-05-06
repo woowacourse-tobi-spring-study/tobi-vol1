@@ -14,7 +14,6 @@ public class CountingConnectionMaker implements SimpleConnectionMaker {
     @Override
     public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
         this.counter++;
-        System.out.println(this.counter + "번 dao에 접근함");
         return realConnectionMaker.makeNewConnection();
     }
 

@@ -7,11 +7,16 @@ import org.springframework.context.annotation.Configuration;
 public class DaoFactory {
     @Bean
     public UserDao UserDao() {
-        return UserDao.getInstance();
+        return new UserDao(connectionMaker());
     }
 
     @Bean
     public SimpleConnectionMaker connectionMaker() {
-        return new CountingConnectionMaker(new BaeminSimpleConnectionMaker());
+        return new CountingConnectionMaker(realConnectionMaker());
+    }
+
+    @Bean
+    public SimpleConnectionMaker realConnectionMaker() {
+        return new BaeminSimpleConnectionMaker();
     }
 }

@@ -17,17 +17,9 @@ public class UserDao {
 
     private final SimpleConnectionMaker simpleConnectionMaker;
 
-    private UserDao(SimpleConnectionMaker simpleConnectionMaker) {
+    public UserDao(SimpleConnectionMaker simpleConnectionMaker) {
         this.simpleConnectionMaker = simpleConnectionMaker;
     }
-
-    public static synchronized UserDao getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new UserDao(new BaeminSimpleConnectionMaker());
-        }
-        return INSTANCE;
-    }
-
 
     public void add(User user) throws ClassNotFoundException, SQLException {
         this.currentConnection = simpleConnectionMaker.makeNewConnection();
