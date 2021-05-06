@@ -10,16 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
-    private static UserDao INSTANCE;
-
     private Connection currentConnection;
-    private User currentUser;
 
-    private final SimpleConnectionMaker simpleConnectionMaker;
-
-    public UserDao(SimpleConnectionMaker simpleConnectionMaker) {
-        this.simpleConnectionMaker = simpleConnectionMaker;
-    }
+    private SimpleConnectionMaker simpleConnectionMaker;
 
     public void add(User user) throws ClassNotFoundException, SQLException {
         this.currentConnection = simpleConnectionMaker.makeNewConnection();
@@ -47,13 +40,12 @@ public class UserDao {
         user.setId(resultSet.getString("id"));
         user.setName(resultSet.getString("name"));
         user.setPassword(resultSet.getString("password"));
-        this.currentUser = user;
 
         resultSet.close();
         preparedStatement.close();
         currentConnection.close();
 
-        return this.currentUser;
+        return user;
     }
 
     public List<User> getAll() throws ClassNotFoundException, SQLException {
@@ -84,5 +76,9 @@ public class UserDao {
 
         preparedStatement.close();
         currentConnection.close();
+    }
+
+    public void setSimpleConnectionMaker(SimpleConnectionMaker simpleConnectionMaker) {
+        this.simpleConnectionMaker = simpleConnectionMaker;
     }
 }
