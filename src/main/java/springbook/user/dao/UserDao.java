@@ -8,7 +8,11 @@ import springbook.user.domain.User;
 
 public final class UserDao {
 
-    private final ConnectionMaker connectionMaker;
+    private ConnectionMaker connectionMaker;
+
+    public UserDao() {
+
+    }
 
     public UserDao(final ConnectionMaker simpleConnectionMaker) {
         this.connectionMaker = simpleConnectionMaker;
@@ -47,5 +51,9 @@ public final class UserDao {
         c.close();
 
         return user;
+    }
+
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 }
