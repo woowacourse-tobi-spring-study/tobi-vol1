@@ -7,8 +7,8 @@ import java.sql.*;
 public class UserDao {
     private final ConnectionMaker connectionMaker;
 
-    public UserDao() {
-        this.connectionMaker = new SimpleConnectionMaker();
+    public UserDao(final ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(final User user) throws ClassNotFoundException, SQLException {
