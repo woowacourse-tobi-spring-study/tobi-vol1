@@ -17,7 +17,7 @@ dependencies {
     // spring
     implementation 'org.springframework:spring-context:3.1.4.RELEASE'
     implementation 'org.springframework:spring-core:3.2.18.RELEASE'
-//    implementation 'org.springframework:spring-asm:3.1.4.RELEASE'
+    implementation 'org.springframework:spring-jdbc:3.2.18.RELEASE'
 
     implementation 'cglib:cglib:3.2.12'
 }

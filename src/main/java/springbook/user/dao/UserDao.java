@@ -4,22 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 import springbook.user.domain.User;
 
 public final class UserDao {
 
-    private ConnectionMaker connectionMaker;
+    private DataSource dataSource;
 
     public UserDao() {
 
     }
 
-    public UserDao(final ConnectionMaker simpleConnectionMaker) {
-        this.connectionMaker = simpleConnectionMaker;
-    }
-
-    public void add(final User user) throws ClassNotFoundException, SQLException {
-        Connection c = connectionMaker.makeConnection();
+    public void add(final User user) throws SQLException {
+        Connection c = dataSource.getConnection();
 
         PreparedStatement ps = c
             .prepareStatement("insert into users(id, name, password) values(?,?,?)");
@@ -33,8 +30,8 @@ public final class UserDao {
         c.close();
     }
 
-    public User get(final String id) throws ClassNotFoundException, SQLException {
-        Connection c = connectionMaker.makeConnection();
+    public User get(final String id) throws SQLException {
+        Connection c = dataSource.getConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
@@ -53,7 +50,7 @@ public final class UserDao {
         return user;
     }
 
-    public void setConnectionMaker(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }
