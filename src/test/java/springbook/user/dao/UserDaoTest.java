@@ -12,7 +12,7 @@ class UserDaoTest {
     @Test
     void add() throws SQLException, ClassNotFoundException {
         //given
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext("springbook/user/dao/daoContext.xml");
         UserDao userDao = context.getBean("UserDao", UserDao.class);
 
         userDao.delete();
