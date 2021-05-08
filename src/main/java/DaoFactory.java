@@ -1,12 +1,19 @@
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import user.domain.ConnectionMaker;
 import user.domain.SimpleConnectionMaker;
 import user.domain.UserDao;
 
+@Configuration
 public class DaoFactory {
+    @Bean
     public UserDao userDao() {
-        ConnectionMaker connectionMaker = new SimpleConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
-        return userDao;
+        return new UserDao(connectionMaker());
+    }
+
+    @Bean
+    public ConnectionMaker connectionMaker() {
+        return new SimpleConnectionMaker();
     }
 }
 
