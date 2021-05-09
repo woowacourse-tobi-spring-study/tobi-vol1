@@ -1,10 +1,10 @@
-package user.dao.templateMethod;
+package tobi1.user.dao.templateMethod;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import user.domain.User;
+import tobi1.user.domain.User;
 
 public abstract class UserDao {
     public void add(User user) throws ClassNotFoundException, SQLException {

@@ -1,4 +1,4 @@
-package user.domain;
+package tobi2.user;
 
 public class User {
     String id;
