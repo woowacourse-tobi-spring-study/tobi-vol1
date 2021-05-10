@@ -1,5 +1,6 @@
 package dao;
 
+import domain.DaoFactory;
 import domain.User;
 
 import java.sql.*;
@@ -8,8 +9,9 @@ public class UserDao {
 
     private ConnectionMaker connectionMaker;
 
-    public UserDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    public UserDao() {
+        DaoFactory daoFactory = new DaoFactory();
+        this.connectionMaker = daoFactory.connectionMaker();
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
