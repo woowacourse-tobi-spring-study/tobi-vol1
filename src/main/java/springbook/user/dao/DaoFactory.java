@@ -11,6 +11,11 @@ public class DaoFactory {
     }
 
     @Bean
+    public UserDao specialUserDao(){
+        return new UserDao(connectionMaker());
+    }
+
+    @Bean
     public ConnectionMaker connectionMaker(){
         return new SimpleConnectionMaker();
     }
