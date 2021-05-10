@@ -8,8 +8,7 @@ public class DaoFactory {
 
     @Bean
     public static UserDao userDao() {
-        UserDao userDao = new UserDao(connectionMaker());
-        return userDao;
+        return new UserDao(connectionMaker());
     }
 
     //TODO Connection 도 팩터리 클래스를 만든다면?
