@@ -2,6 +2,7 @@ package dao;
 
 import domain.DaoFactory;
 import domain.User;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.*;
 
@@ -10,8 +11,9 @@ public class UserDao {
     private ConnectionMaker connectionMaker;
 
     public UserDao() {
-        DaoFactory daoFactory = new DaoFactory();
-        this.connectionMaker = daoFactory.connectionMaker();
+        AnnotationConfigApplicationContext context =
+            new AnnotationConfigApplicationContext(DaoFactory.class);
+        this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
