@@ -340,6 +340,13 @@ DI 정보가 담긴 XML 파일은 ```<beans>```를 루트 엘리먼트로 사용
 * 빈의 클래스 : 빈 오브젝트를 어떤 클래스를 이용해서 만들지 정의
 * 빈의 의존 오브젝트 : 빈의 생성자나 수정자 메서드를 통해 의존 오브젝트를 넣어줍니다.
 
+XML 설정 파일 사용하기
+기본적으로 설정파일의 path 는 resources 폴더 내부에 위치해야 합니다
+GenericXmlApplicationContext 를 생성할 때 인자로 설정파일의 이름을 줍니다.
+```
+new GenericXmlApplication("applicationContext.xml");
+```
+
 
 
 
