@@ -5,7 +5,7 @@ public class SingletonUserDao {
 
     private final ConnectionMaker connectionMaker;
 
-    public SingletonUserDao(ConnectionMaker connectionMaker) {
+    private SingletonUserDao(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
     }
 
