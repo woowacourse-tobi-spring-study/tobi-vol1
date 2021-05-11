@@ -16,7 +16,8 @@ public class DaoFactory {
         return userDao;
     }
 
-    private static DataSource dataSource() {
+    @Bean
+    public static DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
 
         dataSource.setDriverClass(com.mysql.jdbc.Driver.class);
