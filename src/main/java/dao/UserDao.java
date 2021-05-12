@@ -10,16 +10,6 @@ public class UserDao {
 
     private ConnectionMaker connectionMaker;
 
-    public UserDao() {
-        AnnotationConfigApplicationContext context =
-            new AnnotationConfigApplicationContext(DaoFactory.class);
-        this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
-    }
-
-    public UserDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
-    }
-
     public void add(User user) throws ClassNotFoundException, SQLException {
         Connection c = connectionMaker.makeConnection();
 
@@ -33,6 +23,10 @@ public class UserDao {
 
         ps.close();
         c.close();
+    }
+
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
