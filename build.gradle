@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'cglib:cglib:3.2.12'
+    implementation 'org.springframework:spring-jdbc:3.0.7.RELEASE'
     implementation 'org.springframework:spring-context:3.1.4.RELEASE'
     implementation 'org.springframework:spring-core:3.2.18.RELEASE'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.24'
