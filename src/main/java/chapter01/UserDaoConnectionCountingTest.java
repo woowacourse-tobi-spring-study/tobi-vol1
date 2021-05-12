@@ -11,7 +11,7 @@ public class UserDaoConnectionCountingTest {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
         UserDao userDao = context.getBean("userDao", UserDao.class);
 
-        userDao.connections.makeConnection();
+        userDao.connections.getConnection();
 
         CountingConnectionsMaker con = context.getBean("connections", CountingConnectionsMaker.class);
         System.out.println("con.getCounter() = " + con.getCounter());

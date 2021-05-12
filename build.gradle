@@ -20,6 +20,8 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.5'
     implementation group: 'commons-logging', name: 'commons-logging', version: '1.2'
     implementation group: 'org.springframework', name: 'spring-expression', version: '5.3.5'
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.5'
+
     implementation group: 'cglib', name: 'cglib', version: '3.3.0'
 }
 

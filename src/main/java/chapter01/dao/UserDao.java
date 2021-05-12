@@ -2,20 +2,21 @@ package chapter01.dao;
 
 import chapter01.domain.User;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
-    public Connections connections;
+    public DataSource connections;
 
-    public UserDao(Connections connections) {
+    public UserDao(DataSource connections) {
         this.connections = connections;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = connections.makeConnection();
+    public void add(User user) throws SQLException {
+        Connection connection = connections.getConnection();
         PreparedStatement ps = connection.prepareStatement(
                 "insert into users(id, name, password) values(?, ?, ?)");
         ps.setString(1, user.getId());
@@ -28,8 +29,8 @@ public class UserDao {
         connection.close();
     }
 
-    public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection connection = connections.makeConnection();
+    public User get(String id) throws SQLException {
+        Connection connection = connections.getConnection();
         PreparedStatement ps = connection.prepareStatement(
                 "select * from users where id = ?");
         ps.setString(1, id);
