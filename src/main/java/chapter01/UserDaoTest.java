@@ -9,5 +9,8 @@ public class UserDaoTest {
         ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
         UserDao userDao = context.getBean("userDao", UserDao.class);
         System.out.println("userDao = " + userDao.getClass());
+        UserDao userDao2 = context.getBean("userDao", UserDao.class);
+        System.out.println("userDao = " + userDao2.getClass());
+
     }
 }
