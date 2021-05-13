@@ -8,6 +8,8 @@ public class UserDao {
     private static UserDao INSTANCE;
 
     private ConnectionMaker connectionMaker;
+    private Connection c;
+    private User user;
 
     private UserDao(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
@@ -34,7 +36,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection con = connectionMaker.makeConnection();
+        this.c = connectionMaker.makeConnection();
 
         PreparedStatement ps = con.prepareStatement(
             "select * from users where id = ?");
@@ -42,15 +44,14 @@ public class UserDao {
 
         ResultSet rs = ps.executeQuery();
         rs.next();
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
+        this.user.setId(rs.getString("id"));
+        this.user.setName(rs.getString("name"));
+        this.user.setPassword(rs.getString("password"));
 
         rs.close();
         ps.close();
-        con.close();
+        c.close();
 
-        return user;
+        return this.user;
     }
 }
