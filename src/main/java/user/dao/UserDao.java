@@ -1,5 +1,6 @@
 package user.dao;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import user.domain.User;
 
 import java.sql.*;
@@ -12,8 +13,8 @@ public class UserDao {
     private User user;
 
     private UserDao() {
-        DaoFactory daoFactory = new DaoFactory();
-        this.connectionMaker = daoFactory.connectionMaker();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
     }
 
     public static synchronized UserDao getInstance() {
