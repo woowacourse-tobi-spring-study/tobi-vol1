@@ -40,7 +40,7 @@ public class UserDao {
     public User get(String id) throws ClassNotFoundException, SQLException {
         this.c = connectionMaker.makeConnection();
 
-        PreparedStatement ps = con.prepareStatement(
+        PreparedStatement ps = c.prepareStatement(
             "select * from users where id = ?");
         ps.setString(1, id);
 
