@@ -8,7 +8,9 @@ public class DaoFactory {
 
     @Bean
     public UserDao userDao() {
-        return UserDao.getInstance();
+        UserDao userDao = new UserDao();
+        userDao.setConnectionMaker(connectionMaker());
+        return userDao;
     }
 
     @Bean

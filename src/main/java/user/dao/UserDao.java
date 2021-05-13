@@ -6,20 +6,17 @@ import user.domain.User;
 import java.sql.*;
 
 public class UserDao {
-    private static UserDao INSTANCE;
-
     private ConnectionMaker connectionMaker;
     private Connection c;
     private User user;
 
-    private UserDao() {
+    public UserDao() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
         this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
     }
 
-    public static synchronized UserDao getInstance() {
-        if (INSTANCE == null) INSTANCE = new UserDao(INSTANCE.connectionMaker);
-        return INSTANCE;
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
