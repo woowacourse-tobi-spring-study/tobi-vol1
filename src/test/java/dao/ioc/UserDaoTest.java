@@ -1,7 +1,5 @@
-package ioc;
+package dao.ioc;
 
-import dao.ioc.DaoFactory;
-import dao.ioc.UserDao;
 import domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

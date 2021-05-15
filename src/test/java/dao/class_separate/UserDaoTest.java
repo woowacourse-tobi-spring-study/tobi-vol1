@@ -1,8 +1,5 @@
-package class_separate;
+package dao.class_separate;
 
-import dao.class_separate.ConnectionMaker;
-import dao.class_separate.DConnectionMaker;
-import dao.class_separate.UserDao;
 import domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
