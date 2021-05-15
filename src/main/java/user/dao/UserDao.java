@@ -1,13 +1,21 @@
 package user.dao;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import user.domain.User;
 
 import java.sql.*;
 
-public abstract class UserDao {
+public class UserDao {
     private ConnectionMaker connectionMaker;
+    private Connection c;
+    private User user;
 
-    public UserDao(ConnectionMaker connectionMaker) {
+    public UserDao() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
+    }
+
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
     }
 
@@ -27,25 +35,22 @@ public abstract class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection con = connectionMaker.makeConnection();
+        this.c = connectionMaker.makeConnection();
 
-        PreparedStatement ps = con.prepareStatement(
+        PreparedStatement ps = c.prepareStatement(
             "select * from users where id = ?");
         ps.setString(1, id);
 
         ResultSet rs = ps.executeQuery();
         rs.next();
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
+        this.user.setId(rs.getString("id"));
+        this.user.setName(rs.getString("name"));
+        this.user.setPassword(rs.getString("password"));
 
         rs.close();
         ps.close();
-        con.close();
+        c.close();
 
-        return user;
+        return this.user;
     }
-
-    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }
