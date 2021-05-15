@@ -1,15 +1,17 @@
 package springbook.test;
 
-import springbook.dao.DaoFactory;
-import springbook.dao.user.UserDao;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import springbook.dao.UserDao;
 import springbook.domain.user.User;
 
 import java.sql.SQLException;
 
-public class UserDaoTest {
+public class UserDaoXmlTest {
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new DaoFactory().userDao();
+    public static void main(String[] args) throws SQLException {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        UserDao userDao = applicationContext.getBean("userDao", UserDao.class);
         User user = new User();
 
         user.setId("whiteship");
