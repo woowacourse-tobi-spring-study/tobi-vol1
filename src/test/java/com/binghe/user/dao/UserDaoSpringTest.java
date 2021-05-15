@@ -6,21 +6,30 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.binghe.user.domain.User;
 import java.sql.SQLException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-class UserDaoTest {
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = DaoFactory.class)
+public class UserDaoSpringTest {
 
-    private static UserDao userDao;
+    @Autowired
+    private ApplicationContext context;
 
-    @BeforeAll
-    static void beforeAll() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        userDao = context.getBean("userDao", UserDao.class);
+    @Autowired
+    private UserDao userDao;
+
+    @BeforeEach
+    void context() {
+        assertThat(context).isNotNull();
+        assertThat(context.getBean("userDao", UserDao.class)).isNotNull();
     }
 
     @Test

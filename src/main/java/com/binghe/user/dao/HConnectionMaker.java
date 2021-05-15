@@ -1,13 +1,9 @@
-package com.binghe.user.dao.dependency_injection;
+package com.binghe.user.dao;
 
-import com.binghe.user.dao.ConnectionMaker;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * DB 연결에 대한 전략 (핵심 로직) - H2
- */
 public class HConnectionMaker implements ConnectionMaker {
 
     @Override

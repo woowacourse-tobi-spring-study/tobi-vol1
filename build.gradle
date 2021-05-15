@@ -10,16 +10,16 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework', name: 'spring-core', version: '5.2.8.RELEASE'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.2.8.RELEASE'
     implementation group: 'org.springframework', name: 'spring-context', version: '5.2.8.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.2.8.RELEASE'
-    implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'org.springframework', name: 'spring-dao', version: '2.0.8'
 
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.24'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.2.8.RELEASE'
+
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
 test {
