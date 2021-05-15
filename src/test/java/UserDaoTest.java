@@ -1,19 +1,20 @@
+import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import user.domain.CountingConnectionMaker;
 import user.domain.User;
 import user.domain.UserDao;
 
 import java.sql.SQLException;
 
-public class UserDaoConnectionCountingTest {
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+public class UserDaoTest {
+    @Test
+    public void addAndGet() throws SQLException, ClassNotFoundException {
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
         UserDao dao = context.getBean("userDao", UserDao.class);
 
         User user = new User();
-        user.setId("Counting");
-        user.setName("Counting");
+        user.setId("BEANJunit");
+        user.setName("BEANJunit");
         user.setPassword("applied");
 
         dao.add(user);
@@ -24,9 +25,5 @@ public class UserDaoConnectionCountingTest {
         System.out.println(daoUser.getName());
         System.out.println(daoUser.getPassword());
         System.out.println(daoUser.getId() + "조회 성공!");
-
-        CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
-        System.out.println("ccm.getCounter() = " + ccm.getCounter());
     }
-
 }
