@@ -8,6 +8,6 @@ public class SimpleConnectionMaker implements ConnectionMaker{
     public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                "jdbc:mysql://localhost:13306/springbook", "root", "root");
+                "jdbc:mysql://localhost:13308/tobi", "root", "root");
     }
 }
