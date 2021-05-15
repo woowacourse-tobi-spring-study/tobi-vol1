@@ -1,6 +1,9 @@
 package springbook.user.dao;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
@@ -10,7 +13,8 @@ class UserDaoTest {
     @Test
     void add() throws SQLException, ClassNotFoundException {
         //given
-        UserDao userDao = new DaoFactory().UserDao();
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        UserDao userDao = context.getBean("UserDao", UserDao.class);
 
         userDao.delete();
 
