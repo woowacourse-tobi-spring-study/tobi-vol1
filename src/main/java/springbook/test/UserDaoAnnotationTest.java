@@ -2,9 +2,8 @@ package springbook.test;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import springbook.dao.CountingDaoFactory;
-import springbook.dao.connection.CountingConnectionMaker;
-import springbook.dao.user.UserDao;
+import springbook.dao.DaoFactory;
+import springbook.dao.UserDao;
 import springbook.domain.user.User;
 
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import java.sql.SQLException;
 public class UserDaoAnnotationTest {
 
     public static void main(String[] args) throws SQLException {
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
         UserDao userDao = applicationContext.getBean("userDao", UserDao.class);
         User user = new User();
 
@@ -23,11 +22,12 @@ public class UserDaoAnnotationTest {
         System.out.println(user.getId() + "등록 성공");
 
         User user2 = userDao.getUser(user.getId());
-        System.out.println(user2.getName());
-        System.out.println(user2.getPassword());
-        System.out.println(user2.getId() + "조회 성공");
-
-        CountingConnectionMaker countingConnectionMaker = applicationContext.getBean("connectionMaker", CountingConnectionMaker.class);
-        System.out.println(countingConnectionMaker.getCounter());
+        if (!user.getName().equals(user2.getName())) {
+            System.out.println("테스트 실패 (name)");
+        } else if (!user.getPassword().equals(user2.getPassword())) {
+            System.out.println("테스트 실패 (password)");
+        } else {
+            System.out.println("조회 테스트 성공");
+        }
     }
 }

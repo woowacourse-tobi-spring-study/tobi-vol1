@@ -2,7 +2,7 @@ package springbook.test;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import springbook.dao.user.UserDao;
+import springbook.dao.UserDao;
 import springbook.domain.user.User;
 
 import java.sql.SQLException;
