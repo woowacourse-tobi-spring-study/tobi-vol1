@@ -6,27 +6,31 @@ import user.domain.UserDao;
 
 import java.sql.SQLException;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 public class UserDaoWithCountingTest {
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
         UserDao dao = context.getBean("userDao", UserDao.class);
 
+        final String id = "JunitCount";
+        final String name = "JunitCount";
+        final String password = "pw";
+
         User user = new User();
-        user.setId("CountJunit");
-        user.setName("CountJunit");
-        user.setPassword("applied");
+        user.setId(id);
+        user.setName(name);
+        user.setPassword(password);
 
         dao.add(user);
 
-        System.out.println(user.getId() + "등록 성공!");
-
         final User daoUser = dao.get(user.getId());
-        System.out.println(daoUser.getName());
-        System.out.println(daoUser.getPassword());
-        System.out.println(daoUser.getId() + "조회 성공!");
+        assertThat(daoUser.getId()).isEqualTo(id);
+        assertThat(daoUser.getName()).isEqualTo(name);
+        assertThat(daoUser.getPassword()).isEqualTo(password);
 
         CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
-        System.out.println("ccm.getCounter() = " + ccm.getCounter());
+        assertThat(ccm.getCounter()).isEqualTo(2);
     }
 }
