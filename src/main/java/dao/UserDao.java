@@ -3,7 +3,6 @@ package dao;
 import domain.User;
 
 import javax.sql.DataSource;
-import java.sql.*;
 
 public class UserDao {
 
@@ -15,7 +14,6 @@ public class UserDao {
 
     public void add(User user) throws SQLException {
         Connection c = dataSource.getConnection();
-
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)");
 
@@ -31,7 +29,6 @@ public class UserDao {
 
     public User get(String id) throws SQLException {
         Connection c = dataSource.getConnection();
-
         PreparedStatement ps = c.prepareStatement( "select * from users where id = ?");
         ps.setString(1, id);
 
