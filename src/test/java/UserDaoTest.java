@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -7,13 +8,20 @@ import user.domain.UserDao;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserDaoTest {
+
+    private UserDao dao;
+
+    @BeforeEach
+    void setUp() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        dao = context.getBean("userDao", UserDao.class);
+    }
+
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
-
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
 
@@ -38,9 +46,6 @@ public class UserDaoTest {
 
     @Test
     public void getCount() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
-
         dao.deleteAll();
         final User user1 = new User("hello1", "world1", "pw1");
         final User user2 = new User("hello2", "world2", "pw2");
@@ -51,5 +56,12 @@ public class UserDaoTest {
         dao.add(user3);
 
         assertThat(dao.getCount()).isEqualTo(3);
+    }
+
+    @Test
+    public void getException() throws SQLException, ClassNotFoundException {
+        assertThrows(SQLException.class, () -> {
+            dao.get("none");
+        });
     }
 }
