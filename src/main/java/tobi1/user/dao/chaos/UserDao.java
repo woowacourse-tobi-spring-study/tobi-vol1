@@ -1,23 +1,17 @@
-package user.dao.di;
+package tobi1.user.dao.chaos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import user.dao.templateMethod.UserDao;
-import user.domain.User;
+import tobi1.user.domain.User;
 
-public class UserDaoEx {
-
-    private final ConnectionMaker connectionMaker;
-
-    public UserDaoEx(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
-    }
-
+public class UserDao {
     public void add(User user) throws ClassNotFoundException, SQLException {
-        final Connection connection = connectionMaker.makeConnection();
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/nabom", "nabom", "1234");
+
         final PreparedStatement preparedStatement = connection.prepareStatement(
             "insert into users(id, name, password) values(?,?,?)"
         );
@@ -32,7 +26,8 @@ public class UserDaoEx {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        final Connection connection = connectionMaker.makeConnection();
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/nabom", "nabom", "1234");
 
         final PreparedStatement preparedStatement = connection.prepareStatement(
             "select * from users where id = ?"

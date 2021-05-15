@@ -1,4 +1,4 @@
-package user.dao.templateMethod;
+package tobi1.user.dao.templateMethod;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
