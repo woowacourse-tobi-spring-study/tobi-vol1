@@ -1,15 +1,17 @@
 package chapter01;
 
-import chapter01.dao.*;
+import chapter01.dao.Connections;
+import chapter01.dao.CountingConnectionsMaker;
+import chapter01.dao.DConnections;
+import chapter01.dao.UserDao;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
-import java.sql.DriverManager;
 
 @Configuration
-public class DaoFactory {
+public class CountingDaoFactory {
 
     @Bean
     public UserDao userDao() {
@@ -18,6 +20,11 @@ public class DaoFactory {
 
     @Bean
     public Connections connections() {
+        return new CountingConnectionsMaker(realConnectionMaker());
+    }
+
+    @Bean
+    public Connections realConnectionMaker() {
         return new DConnections();
     }
 
