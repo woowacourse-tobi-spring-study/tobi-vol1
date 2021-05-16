@@ -6,22 +6,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.user.domain.User;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = "/test-applicationContext.xml")
-@DirtiesContext
 class UserDaoTest {
-
-    @Autowired
     private UserDao dao;
 
     private User user1;
@@ -33,10 +30,11 @@ class UserDaoTest {
         this.user1 = new User("gyumee", "박성철", "springno1");
         this.user2 = new User("leegw700", "이길원", "springno2");
         this.user3 = new User("bumjin", "박범진", "springno3");
-//        DataSource dataSource = new SingleConnectionDataSource(
-//                "jdbc:mysql://localhost/testdb", "spring", "book", true
-//        );
-//        dao.setDataSource(dataSource);
+        dao = new UserDao();
+        DataSource dataSource = new SingleConnectionDataSource(
+                "jdbc:mysql://localhost/testdb", "root", "1004", true
+        );
+        dao.setDataSource(dataSource);
 
     }
 
