@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user.domain.User;
-import user.domain.UserDao;
+import user.dao.UserDao;
 
 import java.sql.SQLException;
 
@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DaoFactory.class)
+@ContextConfiguration(classes = DaoFactoryForTest.class)
 public class UserDaoTest {
 
     @Autowired
@@ -20,7 +20,6 @@ public class UserDaoTest {
 
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
-        System.out.println("dao = " + dao);
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
 
@@ -45,7 +44,6 @@ public class UserDaoTest {
 
     @Test
     public void getCount() throws SQLException, ClassNotFoundException {
-        System.out.println("dao = " + dao);
         dao.deleteAll();
         final User user1 = new User("hello1", "world1", "pw1");
         final User user2 = new User("hello2", "world2", "pw2");
@@ -60,7 +58,6 @@ public class UserDaoTest {
 
     @Test
     public void getException() throws SQLException, ClassNotFoundException {
-        System.out.println("dao = " + dao);
         assertThrows(SQLException.class, () -> {
             dao.get("none");
         });
