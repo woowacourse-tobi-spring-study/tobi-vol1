@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.domain.user.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -80,5 +81,23 @@ class UserDaoTest {
 
         userDao.addUser(user3);
         assertThat(userDao.getCount()).isEqualTo(3);
+    }
+
+    @Test
+    void getAll() {
+        userDao.deleteAll();
+        List<User> users0 = userDao.getAll();
+        assertThat(users0).isEmpty();
+
+        userDao.addUser(user1);
+        List<User> users1 = userDao.getAll();
+        assertThat(users1).hasSize(1);
+        assertThat(user1).isEqualTo(users1.get(0));
+
+        userDao.addUser(user2);
+        List<User> users2 = userDao.getAll();
+        assertThat(users2).hasSize(2);
+        assertThat(user1).isEqualTo(users2.get(0));
+        assertThat(user2).isEqualTo(users2.get(1));
     }
 }

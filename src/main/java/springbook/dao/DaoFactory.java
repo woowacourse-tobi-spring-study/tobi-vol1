@@ -13,7 +13,6 @@ public class DaoFactory {
     public UserDao userDao() {
         UserDao userDao = new UserDao();
         userDao.setDataSource(dataSource());
-        userDao.setJdbcContext(jdbcContext());
         return userDao;
     }
 
@@ -25,12 +24,5 @@ public class DaoFactory {
         simpleDriverDataSource.setUsername("root");
         simpleDriverDataSource.setPassword("root");
         return simpleDriverDataSource;
-    }
-
-    @Bean
-    public JdbcContext jdbcContext() {
-        JdbcContext jdbcContext = new JdbcContext();
-        jdbcContext.setDataSource(dataSource());
-        return jdbcContext;
     }
 }
