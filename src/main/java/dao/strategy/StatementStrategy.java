@@ -1,4 +1,4 @@
-package dao;
+package dao.strategy;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
