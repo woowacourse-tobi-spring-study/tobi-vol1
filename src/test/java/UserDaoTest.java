@@ -1,9 +1,8 @@
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user.domain.User;
 import user.domain.UserDao;
 
@@ -12,15 +11,12 @@ import java.sql.SQLException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DaoFactory.class)
 public class UserDaoTest {
 
-    private static UserDao dao;
-
-    @BeforeAll
-    static void setUp() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        dao = context.getBean("userDao", UserDao.class);
-    }
+    @Autowired
+    private UserDao dao;
 
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
