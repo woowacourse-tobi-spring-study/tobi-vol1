@@ -1,36 +1,64 @@
 package springbook.user.dao;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = "/test-applicationContext.xml")
 class UserDaoTest {
+    @Autowired
+    private UserDao userDao;
+    private User wedge;
+
+    @BeforeEach
+    void beforeEach() throws SQLException, ClassNotFoundException {
+        wedge = new User("1", "웨웨지지", "wedge123");
+        userDao.delete();
+    }
 
     @Test
-    void add() throws SQLException, ClassNotFoundException {
+    void 유저숫자를_확인한다() throws SQLException, ClassNotFoundException {
         //given
-        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-        UserDao userDao = context.getBean("UserDao", UserDao.class);
-
-        userDao.delete();
-
-        User user = new User();
-        user.setId("1");
-        user.setName("웨웨지지");
-        user.setPassword("wedge123");
-
         //when
-        userDao.add(user);
-        System.out.println(user.getId() + "등록 성공");
-
-        User user2 = userDao.get(user.getId());
-        System.out.println(user2.getName());
-        System.out.println(user2.getPassword());
-        System.out.println(user2.getId() + "조회 성공");
+        for (int i = 0; i < 4; i++) {
+            wedge.setId(String.valueOf(i));
+            유저를_추가하고_확인한다();
+        }
         //then
+        assertThat(userDao.getCount()).isEqualTo(4);
     }
+
+    @Test
+    void 유저가_없다면_박살난다() {
+        //given
+        //when
+        //then
+        assertThatThrownBy(() -> userDao.get("0"))
+                .isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @Test
+    void 유저를_추가하고_확인한다() throws SQLException, ClassNotFoundException {
+        //given
+        //when
+        userDao.add(wedge);
+        //then
+        User expectedWedge = userDao.get(wedge.getId());
+        assertThat(expectedWedge).isEqualTo(wedge);
+        assertThat(expectedWedge.getName()).isEqualTo(wedge.getName());
+        assertThat(expectedWedge.getPassword()).isEqualTo(wedge.getPassword());
+    }
+
 }

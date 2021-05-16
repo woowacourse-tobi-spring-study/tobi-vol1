@@ -1,5 +1,6 @@
 package springbook.user.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -38,17 +39,35 @@ public class UserDao {
         preparedStatement.setString(1, id);
 
         ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-        User user = new User();
-        user.setId(resultSet.getString("id"));
-        user.setName(resultSet.getString("name"));
-        user.setPassword(resultSet.getString("password"));
+        User user = null;
+        if (resultSet.next()) {
+            user = new User();
+            user.setId(resultSet.getString("id"));
+            user.setName(resultSet.getString("name"));
+            user.setPassword(resultSet.getString("password"));
+        }
 
         resultSet.close();
         preparedStatement.close();
         connection.close();
 
+        if (user == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         return user;
+    }
+
+    public int getCount() throws SQLException {
+        Connection connection = dataSource.getConnection();
+        String sql = "SELECT COUNT(*) FROM users";
+        int count;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet rs = preparedStatement.executeQuery()) {
+            rs.next();
+            count = rs.getInt(1);
+        }
+
+        return count;
     }
 
     public List<User> getAll() throws ClassNotFoundException, SQLException {
