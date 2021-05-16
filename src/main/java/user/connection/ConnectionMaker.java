@@ -1,4 +1,4 @@
-package user.domain;
+package user.connection;
 
 import java.sql.Connection;
 import java.sql.SQLException;

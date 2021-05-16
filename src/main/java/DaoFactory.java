@@ -1,8 +1,8 @@
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import user.domain.ConnectionMaker;
-import user.domain.SimpleConnectionMaker;
-import user.domain.UserDao;
+import user.connection.ConnectionMaker;
+import user.connection.SimpleConnectionMaker;
+import user.dao.UserDao;
 
 @Configuration
 public class DaoFactory {

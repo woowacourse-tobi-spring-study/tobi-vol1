@@ -1,9 +1,9 @@
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import user.domain.ConnectionMaker;
-import user.domain.CountingConnectionMaker;
-import user.domain.SimpleConnectionMaker;
-import user.domain.UserDao;
+import user.connection.ConnectionMaker;
+import user.connection.CountingConnectionMaker;
+import user.connection.SimpleConnectionMaker;
+import user.dao.UserDao;
 
 @Configuration
 public class CountingDaoFactory {
