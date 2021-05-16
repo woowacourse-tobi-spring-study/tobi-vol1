@@ -1,6 +1,7 @@
 package springbook.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import springbook.dao.strategy.StatementStrategy;
 import springbook.domain.user.User;
 
 import javax.sql.DataSource;
@@ -11,17 +12,20 @@ import java.sql.SQLException;
 
 public class UserDao {
 
+    private JdbcContext jdbcContext;
     private DataSource dataSource;
 
-    public void addUser(User user) throws SQLException {
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO USERS (ID, NAME, PASSWORD) VALUES (?, ?, ?)");
-        preparedStatement.setString(1, user.getId());
-        preparedStatement.setString(2, user.getName());
-        preparedStatement.setString(3, user.getPassword());
-        preparedStatement.executeUpdate();
-        preparedStatement.close();
-        connection.close();
+    public void addUser(User user) {
+        jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement makeStatement(Connection connection) throws SQLException {
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO USERS (ID, NAME, PASSWORD) VALUES (?, ?, ?)");
+                preparedStatement.setString(1, user.getId());
+                preparedStatement.setString(2, user.getName());
+                preparedStatement.setString(3, user.getPassword());
+                return preparedStatement;
+            }
+        });
     }
 
     public User getUser(String id) throws SQLException {
@@ -45,12 +49,8 @@ public class UserDao {
         return user;
     }
 
-    public void deleteAll() throws SQLException {
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("delete from users");
-        preparedStatement.executeUpdate();
-        preparedStatement.close();
-        connection.close();
+    public void deleteAll() {
+        jdbcContext.executeSql("delete from users");
     }
 
     public int getCount() throws SQLException {
@@ -63,6 +63,10 @@ public class UserDao {
         preparedStatement.close();
         connection.close();
         return count;
+    }
+
+    public void setJdbcContext(JdbcContext jdbcContext) {
+        this.jdbcContext = jdbcContext;
     }
 
     public void setDataSource(DataSource dataSource) {
