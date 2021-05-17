@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.user.domain.User;
@@ -25,7 +24,7 @@ class UserDaoTest {
     @BeforeEach
     void beforeEach() throws SQLException, ClassNotFoundException {
         wedge = new User("1", "웨웨지지", "wedge123");
-        userDao.delete();
+        userDao.deleteAll();
     }
 
     @Test

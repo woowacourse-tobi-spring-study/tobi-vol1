@@ -12,24 +12,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
+    private JdbcContext jdbcContext;
     private DataSource dataSource;
 
     public UserDao(DataSource dataSource) {
+        this.jdbcContext = new JdbcContext(dataSource);
         this.dataSource = dataSource;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection connection = dataSource.getConnection();
+    public void add(final User user) throws SQLException {
+        String sql = "INSERT INTO users (id, name, password) VALUES (?,?,?)";
 
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (id, name, password) VALUES (?,?,?)");
-        preparedStatement.setString(1, user.getId());
-        preparedStatement.setString(2, user.getName());
-        preparedStatement.setString(3, user.getPassword());
-
-        preparedStatement.execute();
-
-        preparedStatement.close();
-        connection.close();
+        jdbcContext.workWithStatementStrategy(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, user.getId());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getPassword());
+            return preparedStatement;
+        });
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
@@ -90,13 +90,9 @@ public class UserDao {
         return users;
     }
 
-    public void delete() throws SQLException, ClassNotFoundException {
-        Connection connection = dataSource.getConnection();
-
-        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users");
-        preparedStatement.executeUpdate();
-
-        preparedStatement.close();
-        connection.close();
+    public void deleteAll() throws SQLException {
+        jdbcContext.executeSql("DELETE FROM users");
     }
+
+
 }
