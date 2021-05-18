@@ -1,4 +1,4 @@
-package com.binghe.user.dao;
+package com.binghe.ch02.user.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

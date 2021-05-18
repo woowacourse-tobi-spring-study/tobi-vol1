@@ -1,4 +1,4 @@
-package com.binghe.learningtest;
+package com.binghe.ch02.learningtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

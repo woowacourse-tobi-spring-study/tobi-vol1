@@ -1,4 +1,4 @@
-package com.binghe.user.dao;
+package com.binghe.ch02.user.dao;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

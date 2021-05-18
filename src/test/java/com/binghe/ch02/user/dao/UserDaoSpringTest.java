@@ -1,10 +1,10 @@
-package com.binghe.user.dao;
+package com.binghe.ch02.user.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.binghe.user.domain.User;
+import com.binghe.ch02.user.domain.User;
 import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

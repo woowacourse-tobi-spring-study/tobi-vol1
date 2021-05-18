@@ -1,6 +1,6 @@
-package com.binghe.user.dao;
+package com.binghe.ch02.user.dao;
 
-import com.binghe.user.domain.User;
+import com.binghe.ch02.user.domain.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

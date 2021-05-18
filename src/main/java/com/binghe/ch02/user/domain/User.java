@@ -1,4 +1,4 @@
-package com.binghe.user.domain;
+package com.binghe.ch02.user.domain;
 
 public class User {
     private String id;
