@@ -3,21 +3,22 @@ package dao;
 import domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserDaoJdbcTest {
-    @Autowired
-    private UserDao dao;
 
     @Test
     @DisplayName("추가와 가지고오기")
     public void addAndGet() throws SQLException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDaoJdbc dao = context.getBean("userDao", UserDaoJdbc.class);
+        UserDaoJdbc dao = context.getBean("userDaoJdbc", UserDaoJdbc.class);
         User user = new User();
         user.setId("asdf");
         user.setName("asdf");
@@ -42,6 +43,22 @@ class UserDaoJdbcTest {
         User qwer2 = dao.get(qwer.getId());
         assertThat(qwer2.getName()).isEqualTo(qwer.getName());
         assertThat(qwer2.getPassword()).isEqualTo(qwer.getPassword());
+    }
 
+    @Test
+    @DisplayName("중복값 추가 확인")
+    public void duplicateData() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        UserDao dao = context.getBean("userDaoJdbc", UserDao.class);
+        User user = new User();
+        user.setId("kang");
+        user.setName("seung");
+        user.setPassword("yoon");
+
+        dao.deleteAll();
+        dao.add(user);
+
+        assertThatThrownBy(() -> dao.add(user))
+                .isInstanceOf(DataAccessException.class);
     }
 }
