@@ -9,15 +9,15 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserDaoTest {
+class UserDaoJdbcTest {
     @Autowired
-
+    private UserDao dao;
 
     @Test
     @DisplayName("추가와 가지고오기")
     public void addAndGet() throws SQLException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc dao = context.getBean("userDao", UserDaoJdbc.class);
         User user = new User();
         user.setId("asdf");
         user.setName("asdf");

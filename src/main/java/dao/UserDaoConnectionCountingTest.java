@@ -9,14 +9,14 @@ import java.sql.SQLException;
 public class UserDaoConnectionCountingTest {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-        UserDao userDao = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc userDaoJdbc = context.getBean("userDao", UserDaoJdbc.class);
 
         User user = new User();
         user.setId("bepoz");
         user.setName("강승윤");
         user.setPassword("positive");
 
-        userDao.add(user);
+        userDaoJdbc.add(user);
 
         CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
         System.out.println("Connection counter: " + ccm.getCounter());
