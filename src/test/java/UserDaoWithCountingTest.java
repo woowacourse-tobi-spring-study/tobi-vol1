@@ -14,6 +14,8 @@ public class UserDaoWithCountingTest {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
         UserDao dao = context.getBean("userDao", UserDao.class);
 
+        dao.deleteAll();
+
         final String id = "JunitCount";
         final String name = "JunitCount";
         final String password = "pw";
@@ -31,6 +33,6 @@ public class UserDaoWithCountingTest {
         assertThat(daoUser.getPassword()).isEqualTo(password);
 
         CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
-        assertThat(ccm.getCounter()).isEqualTo(2);
+        assertThat(ccm.getCounter()).isEqualTo(3);
     }
 }

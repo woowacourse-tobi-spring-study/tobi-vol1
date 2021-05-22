@@ -1,7 +1,6 @@
 package user.dao;
 
 import user.connection.ConnectionMaker;
-import user.dao.statement.StatementStrategy;
 import user.domain.User;
 
 import java.sql.Connection;
@@ -10,19 +9,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
+    private JdbcContext jdbcContext;
     private ConnectionMaker connectionMaker;
 
-    public UserDao(ConnectionMaker connectionMaker) {
+    public UserDao(JdbcContext jdbcContext, ConnectionMaker connectionMaker) {
+        this.jdbcContext = jdbcContext;
         this.connectionMaker = connectionMaker;
-        /*
-        클래스 사이에 관계가 만들어 진다는 것은 한 클래스가 인터페이스 없이 다른 클래스를 직접 사용한다는 뜻
-        클래스가 아닌, 오브젝트-오브젝트 연결 관계가 설정이 되어야 함
-        UserDao의 생성자에서 Connection을 생성하는 것은 얘의 역할이 아니야
-        */
+    }
+
+    public void setJdbcContext(JdbcContext jdbcContext) {
+        this.jdbcContext = jdbcContext;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        jdbcContextWithStatementStrategy(c -> {
+        this.jdbcContext.workWithStatementStrategy(c -> {
             PreparedStatement ps = c.prepareStatement(
                     "insert into users(id, name, password) values(?, ?, ?)");
             ps.setString(1, user.getId());
@@ -89,36 +89,10 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        jdbcContextWithStatementStrategy(c -> {
+        this.jdbcContext.workWithStatementStrategy(c -> {
             PreparedStatement ps = c.prepareStatement("delete from users");
             return ps;
         });
-    }
-
-    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
-        Connection c = null;
-        PreparedStatement ps = null;
-
-        try {
-            c = connectionMaker.makeNewConnection();
-            ps = stmt.makePreparedStatement(c);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                }
-            }
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
     }
 }
 
