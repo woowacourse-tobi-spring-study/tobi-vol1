@@ -1,5 +1,6 @@
 package user.dao;
 
+import com.mysql.cj.protocol.Resultset;
 import user.connection.ConnectionMaker;
 import user.domain.User;
 
@@ -53,7 +54,7 @@ public class UserDao {
         return user;
     }
 
-    public int getCount() throws SQLException, ClassNotFoundException {
+    public int getCount2() throws SQLException, ClassNotFoundException {
         Connection c = connectionMaker.makeNewConnection();
 
         PreparedStatement ps = c.prepareStatement("select count(*) from users");
@@ -69,14 +70,65 @@ public class UserDao {
         return count;
     }
 
+    public int getCount() throws SQLException, ClassNotFoundException {
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            c = connectionMaker.makeNewConnection();
+            ps = c.prepareStatement("select count(*) from users");
+            rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        Connection c = connectionMaker.makeNewConnection();
+        Connection c = null;
+        PreparedStatement ps = null;
 
-        PreparedStatement ps = c.prepareStatement("delete from users");
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+        try {
+            c = connectionMaker.makeNewConnection();
+            ps = c.prepareStatement("delete from users");
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
     }
 }
 
