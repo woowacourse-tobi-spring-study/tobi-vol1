@@ -1,10 +1,12 @@
 package user.dao;
 
-import com.mysql.cj.protocol.Resultset;
 import user.connection.ConnectionMaker;
 import user.domain.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
     private ConnectionMaker connectionMaker;
@@ -106,12 +108,17 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
+        StatementStrategy st = new DeleteAllStatement();
+        jdbcContextWithStatementStrategy(st);
+    }
+
+    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
         Connection c = null;
         PreparedStatement ps = null;
 
         try {
             c = connectionMaker.makeNewConnection();
-            ps = c.prepareStatement("delete from users");
+            ps = stmt.makePreparedStatement(c);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw e;
@@ -130,6 +137,7 @@ public class UserDao {
             }
         }
     }
+
 }
 
 /*
