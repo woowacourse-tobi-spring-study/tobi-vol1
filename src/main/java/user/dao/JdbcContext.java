@@ -1,6 +1,5 @@
 package user.dao;
 
-import user.connection.ConnectionMaker;
 import user.dao.statement.StatementStrategy;
 
 import javax.sql.DataSource;
@@ -9,10 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class JdbcContext {
-    private ConnectionMaker connectionMaker;
+    private DataSource dataSource;
 
-    public JdbcContext(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    public JdbcContext(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public void workWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
@@ -20,7 +19,7 @@ public class JdbcContext {
         PreparedStatement ps = null;
 
         try {
-            c = this.connectionMaker.makeNewConnection();
+            c = this.dataSource.getConnection();
             ps = stmt.makePreparedStatement(c);
             ps.executeUpdate();
         } catch (SQLException e) {

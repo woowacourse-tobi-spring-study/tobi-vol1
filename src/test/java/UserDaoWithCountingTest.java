@@ -33,6 +33,6 @@ public class UserDaoWithCountingTest {
         assertThat(daoUser.getPassword()).isEqualTo(password);
 
         CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
-        assertThat(ccm.getCounter()).isEqualTo(3);
+        assertThat(ccm.getCounter()).isEqualTo(1);
     }
 }
