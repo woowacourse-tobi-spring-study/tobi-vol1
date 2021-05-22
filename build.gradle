@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.24'
-    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    compile 'com.h2database:h2:1.4.197'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -21,6 +21,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.6.RELEASE'
     implementation group: 'org.springframework', name: 'spring-context', version: '3.2.18.RELEASE'
     implementation group: 'org.springframework', name: 'spring-core', version: '3.1.4.RELEASE'
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.0.8.RELEASE'
 }
 
 test {
