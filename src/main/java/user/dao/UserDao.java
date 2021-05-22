@@ -1,8 +1,6 @@
 package user.dao;
 
 import user.connection.ConnectionMaker;
-import user.dao.statement.AddStatement;
-import user.dao.statement.DeleteAllStatement;
 import user.dao.statement.StatementStrategy;
 import user.domain.User;
 
@@ -24,8 +22,14 @@ public class UserDao {
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        StatementStrategy statement = new AddStatement(user);
-        jdbcContextWithStatementStrategy(statement);
+        jdbcContextWithStatementStrategy(c -> {
+            PreparedStatement ps = c.prepareStatement(
+                    "insert into users(id, name, password) values(?, ?, ?)");
+            ps.setString(1, user.getId());
+            ps.setString(2, user.getName());
+            ps.setString(3, user.getPassword());
+            return ps;
+        });
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
@@ -85,8 +89,10 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        StatementStrategy statement = new DeleteAllStatement();
-        jdbcContextWithStatementStrategy(statement);
+        jdbcContextWithStatementStrategy(c -> {
+            PreparedStatement ps = c.prepareStatement("delete from users");
+            return ps;
+        });
     }
 
     public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
