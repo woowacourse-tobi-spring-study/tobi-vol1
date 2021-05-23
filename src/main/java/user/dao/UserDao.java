@@ -1,4 +1,7 @@
-package user.domain;
+package user.dao;
+
+import user.connection.ConnectionMaker;
+import user.domain.User;
 
 import java.sql.*;
 

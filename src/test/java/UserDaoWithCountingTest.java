@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import user.domain.CountingConnectionMaker;
+import user.connection.CountingConnectionMaker;
 import user.domain.User;
-import user.domain.UserDao;
+import user.dao.UserDao;
 
 import java.sql.SQLException;
 
