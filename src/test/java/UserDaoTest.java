@@ -3,13 +3,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user.domain.User;
 import user.dao.UserDao;
+import user.domain.User;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactoryForTest.class)
@@ -54,12 +53,5 @@ public class UserDaoTest {
         dao.add(user3);
 
         assertThat(dao.getCount()).isEqualTo(3);
-    }
-
-    @Test
-    public void getException() throws SQLException, ClassNotFoundException {
-        assertThrows(SQLException.class, () -> {
-            dao.get("none");
-        });
     }
 }

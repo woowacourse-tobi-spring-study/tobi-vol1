@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class DaoFactoryForTest {
     @Bean
     public UserDao userDao() throws SQLException {
-        return new UserDao(jdbcContext(), connectionMaker());
+        return new UserDao(dataSource());
     }
 
     @Bean

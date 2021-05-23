@@ -33,6 +33,7 @@ public class UserDaoWithCountingTest {
         assertThat(daoUser.getPassword()).isEqualTo(password);
 
         CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
-        assertThat(ccm.getCounter()).isEqualTo(1);
+        //이제 그냥 datasource 주입받아서 사용
+        assertThat(ccm.getCounter()).isEqualTo(0);
     }
 }

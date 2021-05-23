@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class CountingDaoFactory {
     @Bean
     public UserDao userDao() throws SQLException {
-        return new UserDao(jdbcContext(), connectionMaker());
+        return new UserDao(dataSource());
     }
 
     @Bean
