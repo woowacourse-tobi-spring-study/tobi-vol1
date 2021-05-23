@@ -28,4 +28,10 @@ public class CalculatorTest {
         int multiply = calculator.calcMultiply(path);
         assertThat(multiply).isEqualTo(24);
     }
+
+    @Test
+    public void concat() throws IOException {
+        final String concat = calculator.concat(path);
+        assertThat(concat).isEqualTo("1234");
+    }
 }
