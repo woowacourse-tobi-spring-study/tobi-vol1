@@ -17,19 +17,11 @@ public class UserDao {
         this.connectionMaker = connectionMaker;
     }
 
-    public void setJdbcContext(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
-    }
-
     public void add(User user) throws ClassNotFoundException, SQLException {
-        this.jdbcContext.workWithStatementStrategy(c -> {
-            PreparedStatement ps = c.prepareStatement(
-                    "insert into users(id, name, password) values(?, ?, ?)");
-            ps.setString(1, user.getId());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getPassword());
-            return ps;
-        });
+        this.jdbcContext.executeSql("insert into users (id, name, password) values (?, ?, ?)",
+                user.getId(),
+                user.getName(),
+                user.getPassword());
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
@@ -89,10 +81,7 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        this.jdbcContext.workWithStatementStrategy(c -> {
-            PreparedStatement ps = c.prepareStatement("delete from users");
-            return ps;
-        });
+        this.jdbcContext.executeSql("delete from users");
     }
 }
 

@@ -14,6 +14,33 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
+    public void executeSql(final String... query) throws SQLException, ClassNotFoundException {
+        workWithStatementStrategy(
+                c -> {
+                    if (query.length == 1) {
+                        return c.prepareStatement(query[0]);
+                    }
+                    return makeFullQuery(c, query);
+                }
+        );
+    }
+
+    private PreparedStatement makeFullQuery(Connection c, String... query) throws SQLException {
+        final String[] splitQuery = query[0].split("values");
+
+        String sqlStatement = splitQuery[0];
+        sqlStatement.replace("(\\(*\\))", "");
+
+        String userParameter = splitQuery[1];
+
+        for (int i = 1; i < query.length; i++) {
+            userParameter = userParameter.replaceFirst("\\?", "\'" + query[i] + "\'");
+        }
+
+        String sql = sqlStatement + " values " + userParameter;
+        return c.prepareStatement(sql);
+    }
+
     public void workWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
         Connection c = null;
         PreparedStatement ps = null;
