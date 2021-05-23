@@ -6,35 +6,26 @@ import java.io.IOException;
 
 public class Calculator {
     public int calcSum(String path) throws IOException {
-        BufferedReaderCallback sumCallback = br -> {
-            int sum = 0;
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sum += Integer.valueOf(line);
-            }
-            return sum;
-        };
-        return fileReadTemplate(path, sumCallback);
+        LineCallback sumCallback = (line, value) -> value + Integer.parseInt(line);
+        return lineReadTemplate(path, sumCallback, 0);
     }
 
     public int calcMultiply(String path) throws IOException {
-        BufferedReaderCallback multiCallback = br -> {
-            int multi = 1;
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                multi *= Integer.valueOf(line);
-            }
-            return multi;
-        };
-        return fileReadTemplate(path, multiCallback);
+        LineCallback multiCallback = (line, value) -> value * Integer.parseInt(line);
+        return lineReadTemplate(path, multiCallback, 1);
     }
 
-    private Integer fileReadTemplate(String path, BufferedReaderCallback callback) throws IOException {
+    private Integer lineReadTemplate(String path, LineCallback callback, int initVal) throws IOException {
         BufferedReader br = null;
 
         try {
             br = new BufferedReader(new FileReader(path));
-            return callback.doSomethingWithReader(br);
+            Integer res = initVal;
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                res = callback.doSomethingWithLine(line, res);
+            }
+            return res;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw e;
