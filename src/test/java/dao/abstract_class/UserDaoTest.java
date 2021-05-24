@@ -1,7 +1,5 @@
-package abstract_class;
+package dao.abstract_class;
 
-import dao.abstract_class.NUserDao;
-import dao.abstract_class.UserDao;
 import domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
