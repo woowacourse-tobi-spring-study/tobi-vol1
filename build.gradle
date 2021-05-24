@@ -11,12 +11,15 @@ repositories {
 
 dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.24'
-    implementation group: 'org.springframework', name: 'spring-core', version: '3.2.18.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-context', version: '3.1.4.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '3.2.18.RELEASE'
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.7'
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.7'
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.7'
     implementation group: 'cglib', name: 'cglib', version: '3.3.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.7'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    testImplementation 'org.assertj:assertj-core:3.18.1'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
 }
 
 test {
