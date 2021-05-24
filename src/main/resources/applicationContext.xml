@@ -10,7 +10,7 @@
     <property name="password" value=""/>
   </bean>
 
-  <bean id="userDao" class="com.binghe.user.dao.spring_ioc.UserDao">
+  <bean id="userDao" class="com.binghe.ch02.user.dao.spring_ioc.UserDao">
     <constructor-arg ref="dataSource"/>
   </bean>
 </beans>
