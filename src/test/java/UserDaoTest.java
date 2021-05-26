@@ -21,10 +21,7 @@ public class UserDaoTest {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
-        User user = new User();
-        user.setId("xrabcde");
-        user.setName("ara");
-        user.setPassword("root");
+        User user = new User("xrabcde", "ara", "root");
 
         dao.add(user);
 
