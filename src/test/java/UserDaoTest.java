@@ -1,7 +1,7 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
 import user.dao.DaoFactory;
 import user.dao.UserDao;
 import user.domain.User;
@@ -9,18 +9,24 @@ import user.domain.User;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static junit.Assert.assertThat;
 
 public class UserDaoTest {
+    private UserDao dao;
+    private User user1;
+    private User user2;
+    private User user3;
+
+    @BeforeEach
+    void setUp() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        this.dao = context.getBean("userDao", UserDao.class);
+        this.user1 = new User("xrabcde", "ara", "root");
+        this.user2 = new User("xrabcd", "bada", "root");
+        this.user2 = new User("xrabc", "ba", "root");
+    }
 
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
-        User user1 = new User("xrabcde", "ara", "root");
-        User user2 = new User("xrabcd", "bada", "root");
-
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
@@ -39,14 +45,6 @@ public class UserDaoTest {
 
     @Test
     void count() throws SQLException {
-        ApplicationContext context = new GenericXmlApplicationContext (
-            "applicationContext.xml");
-
-        UserDao dao = context.getBean("userDao", UserDao.class);
-        User user1 = new User("xrabcde", "조아라", "1234");
-        User user2 = new User("xrabcd", "조아", "1234");
-        User user3 = new User("xrabc", "조", "1234");
-
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
