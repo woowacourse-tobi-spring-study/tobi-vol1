@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ContextConfiguration(locations = "/applicationContext.xml")
 class UserDaoTest {
     @Autowired
-    ApplicationContext context;
-
     UserDao userDao;
     User user1;
     User user2;
@@ -27,7 +25,6 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        userDao = context.getBean("userDao", UserDao.class);
         user1 = new User("gyumee", "박성철", "springno1");
         user2 = new User("leegw700", "이길원", "springno2");
         user3 = new User("bumjin", "박범진", "springno3");
