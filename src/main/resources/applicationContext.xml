@@ -10,7 +10,7 @@
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
-    <bean id="UserDao" class="springbook.user.dao.UserDao">
+    <bean id="UserDao" class="springbook.user.dao.UserDaoJdbc">
         <constructor-arg ref="dataSource"/>
     </bean>
 </beans>
