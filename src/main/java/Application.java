@@ -1,7 +1,3 @@
-import dao.DConnectionMaker;
-import dao.UserDao;
-import domain.User;
-
 import java.sql.SQLException;
 
 public class Application {
