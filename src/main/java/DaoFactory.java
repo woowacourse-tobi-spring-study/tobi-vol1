@@ -1,19 +1,40 @@
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import user.connection.ConnectionMaker;
 import user.connection.SimpleConnectionMaker;
+import user.dao.JdbcContext;
 import user.dao.UserDao;
+
+import javax.sql.DataSource;
+import java.sql.Driver;
+import java.sql.SQLException;
 
 @Configuration
 public class DaoFactory {
     @Bean
-    public UserDao userDao() {
-        return new UserDao(connectionMaker());
+    public UserDao userDao() throws SQLException {
+        return new UserDao(dataSource());
+    }
+
+    @Bean
+    public JdbcContext jdbcContext() throws SQLException {
+        return new JdbcContext(dataSource());
     }
 
     @Bean
     public ConnectionMaker connectionMaker() {
         return new SimpleConnectionMaker();
+    }
+
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        Driver mysqlDriver = new com.mysql.cj.jdbc.Driver();
+        return new SimpleDriverDataSource(
+                mysqlDriver,
+                "jdbc:mysql://localhost:13306/springbook",
+                "root",
+                "root");
     }
 }
 

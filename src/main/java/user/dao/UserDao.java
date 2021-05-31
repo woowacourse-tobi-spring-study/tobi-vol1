@@ -1,82 +1,47 @@
 package user.dao;
 
-import user.connection.ConnectionMaker;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import user.domain.User;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
-    private ConnectionMaker connectionMaker;
+    private JdbcTemplate jdbcTemplate;
 
-    public UserDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
-        /*
-        클래스 사이에 관계가 만들어 진다는 것은 한 클래스가 인터페이스 없이 다른 클래스를 직접 사용한다는 뜻
-        클래스가 아닌, 오브젝트-오브젝트 연결 관계가 설정이 되어야 함
-        UserDao의 생성자에서 Connection을 생성하는 것은 얘의 역할이 아니야
-        */
+    public UserDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = connectionMaker.makeNewConnection();
+    private RowMapper<User> userMapper = new RowMapper<User>() {
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            final User user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+            return user;
+        }
+    };
 
-        PreparedStatement ps = c.prepareStatement(
-                "insert into users(id, name, password) values(?, ?, ?)");
-        ps.setString(1, user.getId());
-        ps.setString(2, user.getName());
-        ps.setString(3, user.getPassword());
-
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+    public void add(User user) {
+        this.jdbcTemplate.update("insert into users (id, name, password) values (?, ?, ?)",
+                user.getId(),
+                user.getName(),
+                user.getPassword());
     }
 
-    public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = connectionMaker.makeNewConnection();
-
-        PreparedStatement ps = c.prepareStatement(
-                "select * from users where id = ?");
-        ps.setString(1, id);
-
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
-
-        rs.close();
-        ps.close();
-        c.close();
-
-        return user;
+    public User get(String id) {
+        return this.jdbcTemplate.queryForObject("select * from users where id = ?", new Object[]{id}, userMapper);
     }
 
-    public int getCount() throws SQLException, ClassNotFoundException {
-        Connection c = connectionMaker.makeNewConnection();
-
-        PreparedStatement ps = c.prepareStatement("select count(*) from users");
-
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
-
-        rs.close();
-        ps.close();
-        c.close();
-
-        return count;
+    public int getCount() {
+        return this.jdbcTemplate.queryForObject("select count (*) from users", Integer.class);
     }
 
-    public void deleteAll() throws SQLException, ClassNotFoundException {
-        Connection c = connectionMaker.makeNewConnection();
-
-        PreparedStatement ps = c.prepareStatement("delete from users");
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+    public void deleteAll() {
+        this.jdbcTemplate.update("delete from users");
     }
 }
 
