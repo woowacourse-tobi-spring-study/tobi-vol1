@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import springbook.dao.UserDao;
@@ -89,9 +90,9 @@ class UserServiceTest {
     void upgradeAllOrNothing() throws SQLException {
         UserService userService = new TestUserService(users.get(3).getId());
         userService.setUserDao(userDao);
-        userService.setDataSource(dataSource);
         userService.setUserLevelUpgradePolicy(new NormalUserLevelUpgradePolicy());
-
+        userService.setTransactionManager(new DataSourceTransactionManager(dataSource));
+        
         userDao.deleteAll();
         users.forEach(user -> userDao.addUser(user));
 
