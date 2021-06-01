@@ -1,5 +1,6 @@
 package springbook.domain.user;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class User {
@@ -10,6 +11,8 @@ public class User {
     private Level level;
     private int login;
     private int recommend;
+
+    private Date lastUpgraded;
 
     public User() {
     }
@@ -69,6 +72,23 @@ public class User {
 
     public void setRecommend(int recommend) {
         this.recommend = recommend;
+    }
+
+    public Date getLastUpgraded() {
+        return lastUpgraded;
+    }
+
+    public void setLastUpgraded(Date lastUpgraded) {
+        this.lastUpgraded = lastUpgraded;
+    }
+
+    public void upgradeLevel() {
+        Level next = level.getNext();
+        if (next == null) {
+            throw new IllegalArgumentException("cannot upgrae this level " + level);
+        }
+        level = next;
+        lastUpgraded = new Date();
     }
 
     @Override
