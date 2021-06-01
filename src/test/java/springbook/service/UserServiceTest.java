@@ -10,6 +10,8 @@ import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +23,9 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private UserDao userDao;
@@ -39,7 +44,7 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeLevels() {
+    void upgradeLevels() throws SQLException {
         userDao.deleteAll();
         users.forEach(user -> userDao.addUser(user));
 
@@ -78,5 +83,24 @@ class UserServiceTest {
 
         assertThat(userWithLevel.getLevel()).isEqualTo(userWithLevelRead.getLevel());
         assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
+    }
+
+    @Test
+    void upgradeAllOrNothing() throws SQLException {
+        UserService userService = new TestUserService(users.get(3).getId());
+        userService.setUserDao(userDao);
+        userService.setDataSource(dataSource);
+        userService.setUserLevelUpgradePolicy(new NormalUserLevelUpgradePolicy());
+
+        userDao.deleteAll();
+        users.forEach(user -> userDao.addUser(user));
+
+        try {
+            userService.upgradeLevels();
+        } catch (IllegalArgumentException e) {
+            System.out.println("hi");
+        }
+
+        checkLevel(users.get(1), false);
     }
 }

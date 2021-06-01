@@ -9,6 +9,7 @@
     <bean id="userService" class="springbook.service.UserService">
         <property name="userDao" ref="userDaoJdbc"/>
         <property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <bean id="userLevelUpgradePolicy" class="springbook.service.NormalUserLevelUpgradePolicy"/>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
