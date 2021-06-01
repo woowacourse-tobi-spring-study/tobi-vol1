@@ -8,6 +8,7 @@ public class User {
     private String id;
     private String name;
     private String password;
+    private String email;
     private Level level;
     private int login;
     private int recommend;
@@ -17,10 +18,11 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String password, Level level, int login, int recommend) {
+    public User(String id, String name, String password, String email, Level level, int login, int recommend) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.email = email;
         this.level = level;
         this.login = login;
         this.recommend = recommend;
@@ -82,6 +84,14 @@ public class User {
         this.lastUpgraded = lastUpgraded;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public void upgradeLevel() {
         Level next = level.getNext();
         if (next == null) {
@@ -96,11 +106,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return login == user.login && recommend == user.recommend && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && level == user.level;
+        return login == user.login && recommend == user.recommend && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && level == user.level && Objects.equals(lastUpgraded, user.lastUpgraded);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, level, login, recommend);
+        return Objects.hash(id, name, password, email, level, login, recommend, lastUpgraded);
     }
 }

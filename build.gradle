@@ -16,6 +16,11 @@ dependencies {
     implementation group: 'cglib', name: 'cglib', version: '3.3.0'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.24'
 
+    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+    implementation group: 'org.springframework', name: 'spring-context-support', version: '3.0.7.RELEASE'
+
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testCompile("org.assertj:assertj-core:3.11.1")

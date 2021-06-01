@@ -44,9 +44,9 @@ class UserDaoJdbcTest {
     void setUp() {
         System.out.println(this);
         System.out.println(this.applicationContext);
-        user1 = new User("gyumee", "park", "springno1", Level.BASIC, 1, 0);
-        user2 = new User("leegw700", "lee", "springno2", Level.SILVER, 55, 10);
-        user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
+        user1 = new User("gyumee", "park", "springno1", "abc@naver.com", Level.BASIC, 1, 0);
+        user2 = new User("leegw700", "lee", "springno2", "abafddac@naver.com", Level.SILVER, 55, 10);
+        user3 = new User("bumjin", "박범진", "springno3", "abc11111@naver.com", Level.GOLD, 100, 40);
     }
 
     @Test
