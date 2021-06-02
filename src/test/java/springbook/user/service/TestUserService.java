@@ -7,14 +7,14 @@ import springbook.user.domain.User;
 public class TestUserService extends UserServiceImpl {
     private String id;
 
-    public TestUserService(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy, PlatformTransactionManager platformTransactionManager, String id) {
-        super(userDao, userLevelUpgradePolicy, platformTransactionManager);
+    public TestUserService(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy, PlatformTransactionManager platformTransactionManager, MailSender mailSender, String id) {
+        super(userDao, userLevelUpgradePolicy, platformTransactionManager, mailSender);
         this.id = id;
     }
 
     @Override
     protected void upgradeLevel(User user) {
-        if(user.getId().equals(this.id)){
+        if (user.getId().equals(this.id)) {
             throw new TestUserServiceException("테스트 오류입니다");
         }
         super.upgradeLevel(user);
