@@ -1,13 +1,14 @@
 package springbook.user.service;
 
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
 public class TestUserService extends UserServiceImpl {
     private String id;
 
-    public TestUserService(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy, String id) {
-        super(userDao, userLevelUpgradePolicy);
+    public TestUserService(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy, PlatformTransactionManager platformTransactionManager, String id) {
+        super(userDao, userLevelUpgradePolicy, platformTransactionManager);
         this.id = id;
     }
 

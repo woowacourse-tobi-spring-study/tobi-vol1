@@ -13,9 +13,14 @@
     <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <constructor-arg ref="dataSource"/>
     </bean>
+    <bean id="platformTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
     <bean id="userLevelUpgradePolicy" class="springbook.user.service.DefaultUpgradePolicy"/>
     <bean id="userService" class="springbook.user.service.UserServiceImpl">
         <constructor-arg name="userDao" ref="userDao"/>
         <constructor-arg name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
+        <constructor-arg name="platformTransactionManager" ref="platformTransactionManager"/>
     </bean>
+
 </beans>

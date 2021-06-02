@@ -12,24 +12,24 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
-    private DataSource dataSource;
     private UserLevelUpgradePolicy userLevelUpgradePolicy;
+    private PlatformTransactionManager platformTransactionManager;
 
-    public UserServiceImpl(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy) {
+    public UserServiceImpl(UserDao userDao, UserLevelUpgradePolicy userLevelUpgradePolicy, PlatformTransactionManager platformTransactionManager) {
         this.userDao = userDao;
         this.userLevelUpgradePolicy = userLevelUpgradePolicy;
+        this.platformTransactionManager = platformTransactionManager;
     }
 
     @Override
     public void upgradeLevels() {
-        PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        TransactionStatus status = platformTransactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             List<User> all = userDao.getAll();
             all.forEach(this::upgradeLevel);
-            transactionManager.commit(status);
+            platformTransactionManager.commit(status);
         } catch (RuntimeException e) {
-            transactionManager.rollback(status);
+            platformTransactionManager.rollback(status);
             throw e;
         }
 
@@ -42,7 +42,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 }

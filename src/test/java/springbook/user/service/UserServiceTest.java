@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
@@ -25,7 +26,7 @@ public class UserServiceTest {
     @Autowired
     UserDao userDao;
     @Autowired
-    DataSource dataSource;
+    PlatformTransactionManager platformTransactionManager;
 
     private List<User> users;
 
@@ -62,8 +63,7 @@ public class UserServiceTest {
 
     @Test
     public void upgradeAllOrNothing() {
-        UserServiceImpl testUserService = new TestUserService(userDao, new DefaultUpgradePolicy(), users.get(3).getId());
-        testUserService.setDataSource(dataSource);
+        UserServiceImpl testUserService = new TestUserService(userDao, new DefaultUpgradePolicy(), platformTransactionManager,  users.get(3).getId());
 
         userDao.deleteAll();
         for (User user : users) {
