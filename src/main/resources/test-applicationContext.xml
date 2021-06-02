@@ -10,7 +10,20 @@
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
-    <bean id="UserDao" class="springbook.user.dao.UserDaoJdbc">
+    <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <constructor-arg ref="dataSource"/>
     </bean>
+    <bean id="platformTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <bean id="mailSender" class="springbook.user.service.DummyMailSenderImpl">
+    </bean>
+    <bean id="userLevelUpgradePolicy" class="springbook.user.service.DefaultUpgradePolicy"/>
+    <bean id="userService" class="springbook.user.service.UserServiceImpl">
+        <constructor-arg name="userDao" ref="userDao"/>
+        <constructor-arg name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
+        <constructor-arg name="platformTransactionManager" ref="platformTransactionManager"/>
+        <constructor-arg name="mailSender" ref="mailSender"/>
+    </bean>
+
 </beans>
