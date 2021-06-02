@@ -13,7 +13,7 @@
     <bean id="UserDao" class="springbook.user.dao.UserDaoJdbc">
         <constructor-arg ref="dataSource"/>
     </bean>
-    <bean id="userService" class="springbook.user.service.UserService">
+    <bean id="userService" class="springbook.user.service.UserServiceImpl">
         <property name="userDao" value="UserDao"/>
     </bean>
 </beans>

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(locations = "/test-applicationContext.xml")
 public class UserServiceTest {
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
     @Autowired
     UserDao userDao;
 
