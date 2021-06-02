@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -28,9 +29,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
 class UserDaoTest {
-    private static User USER1 = new User("1", "이름1", "비번1");
-    private static User USER2 = new User("2", "이름2", "비번2");
-    private static User USER3 = new User("3", "이름3", "비번3");
+    private static User USER1 = new User("wedge1", "이름1", "springno1", Level.BASIC, 1, 0);
+    private static User USER2 = new User("wedge2", "이름2", "springno2", Level.SILVER, 55, 10);
+    private static User USER3 = new User("wedge3", "이름3", "springno3", Level.GOLD, 100, 40);
 
     @Autowired
     private UserDao userDao;
@@ -41,7 +42,8 @@ class UserDaoTest {
 
     @BeforeEach
     void beforeEach() throws SQLException, ClassNotFoundException {
-        wedge = new User("1", "웨웨지지", "wedge123");
+        wedge = new User("wedge1", "이름1", "springno1", Level.BASIC, 1, 0);
+
         userDao.deleteAll();
     }
 
@@ -76,6 +78,9 @@ class UserDaoTest {
         assertThat(expectedWedge).isEqualTo(wedge);
         assertThat(expectedWedge.getName()).isEqualTo(wedge.getName());
         assertThat(expectedWedge.getPassword()).isEqualTo(wedge.getPassword());
+        assertThat(expectedWedge.getLevel()).isEqualTo(wedge.getLevel());
+        assertThat(expectedWedge.getLogin()).isEqualTo(wedge.getLogin());
+        assertThat(expectedWedge.getRecommend()).isEqualTo(wedge.getRecommend());
     }
 
     @Test
