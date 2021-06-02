@@ -10,10 +10,12 @@ import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
@@ -22,6 +24,8 @@ public class UserServiceTest {
     UserServiceImpl userService;
     @Autowired
     UserDao userDao;
+    @Autowired
+    DataSource dataSource;
 
     private List<User> users;
 
@@ -44,7 +48,6 @@ public class UserServiceTest {
         }
 
         userService.upgradeLevels();
-
         checkLevel(users.get(0), false);
         checkLevel(users.get(1), true);
         checkLevel(users.get(2), false);
@@ -55,5 +58,24 @@ public class UserServiceTest {
     private void checkLevel(User user, boolean isUpgrade) {
         User userUpdate = userDao.get(user.getId());
         assertThat(userUpdate.getLevel() != user.getLevel()).isEqualTo(isUpgrade);
+    }
+
+    @Test
+    public void upgradeAllOrNothing() {
+        UserServiceImpl testUserService = new TestUserService(userDao, new DefaultUpgradePolicy(), users.get(3).getId());
+        testUserService.setDataSource(dataSource);
+
+        userDao.deleteAll();
+        for (User user : users) {
+            userDao.add(user);
+        }
+
+        try {
+            testUserService.upgradeLevels();
+            fail("TestUserServiceException");
+        } catch (TestUserServiceException e) {
+        }
+
+        checkLevel(users.get(1), false);
     }
 }
