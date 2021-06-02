@@ -10,7 +10,10 @@
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
-    <bean id="UserDao" class="springbook.user.dao.UserDaoJdbc">
+    <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <constructor-arg ref="dataSource"/>
+    </bean>
+    <bean id="userService" class="springbook.user.service.UserService">
+        <property name="userDao" ref="userDao"/>
     </bean>
 </beans>

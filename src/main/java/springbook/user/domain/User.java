@@ -22,6 +22,10 @@ public class User {
         this.recommend = recommend;
     }
 
+    public void upgradeLevel() {
+        this.level = level.predicateLevel(this.login, this.recommend);
+    }
+
     public String getId() {
         return id;
     }
