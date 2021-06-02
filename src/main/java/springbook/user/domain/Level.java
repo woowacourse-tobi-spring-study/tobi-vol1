@@ -5,9 +5,12 @@ import java.util.function.BiPredicate;
 import java.util.function.IntPredicate;
 
 public enum Level {
-    BASIC(1, (login, recommend) -> login >= 50),
-    SILVER(2, (login, recommend) -> recommend >= 30),
+    BASIC(1, (login, recommend) -> login >= Level.MIN_LOGCOUNT_WITH_SILVER),
+    SILVER(2, (login, recommend) -> recommend >= Level.MIN_RECOMMEND_WITH_GOLD),
     GOLD(3, (login, recommend) -> false);
+
+    public static final int MIN_LOGCOUNT_WITH_SILVER = 50;
+    public static final int MIN_RECOMMEND_WITH_GOLD = 30;
 
     private final int value;
     private final BiPredicate<Integer, Integer> levelUpPredicate;

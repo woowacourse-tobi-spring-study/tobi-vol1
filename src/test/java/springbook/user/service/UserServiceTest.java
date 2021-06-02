@@ -28,11 +28,11 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         users = Arrays.asList(
-                new User("wedge1", "웨지", "p1", Level.BASIC, 49, 0),
-                new User("wedge2", "웨지", "p2", Level.BASIC, 50, 0),
-                new User("wedge3", "웨지", "p3", Level.SILVER, 60, 29),
-                new User("wedge4", "웨지", "p4", Level.SILVER, 60, 30),
-                new User("wedge5", "웨지", "p5", Level.GOLD, 100, 100)
+                new User("wedge1", "웨지", "p1", Level.BASIC, Level.MIN_LOGCOUNT_WITH_SILVER - 1, 0),
+                new User("wedge2", "웨지", "p2", Level.BASIC, Level.MIN_LOGCOUNT_WITH_SILVER, 0),
+                new User("wedge3", "웨지", "p3", Level.SILVER, 60, Level.MIN_RECOMMEND_WITH_GOLD - 1),
+                new User("wedge4", "웨지", "p4", Level.SILVER, 60, Level.MIN_RECOMMEND_WITH_GOLD),
+                new User("wedge5", "웨지", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
         );
     }
 
@@ -45,15 +45,15 @@ public class UserServiceTest {
 
         userService.upgradeLevels();
 
-        checkLevel(users.get(0), Level.BASIC);
-        checkLevel(users.get(1), Level.SILVER);
-        checkLevel(users.get(2), Level.SILVER);
-        checkLevel(users.get(3), Level.GOLD);
-        checkLevel(users.get(4), Level.GOLD);
+        checkLevel(users.get(0), false);
+        checkLevel(users.get(1), true);
+        checkLevel(users.get(2), false);
+        checkLevel(users.get(3), true);
+        checkLevel(users.get(4), false);
     }
 
-    private void checkLevel(User user, Level level) {
+    private void checkLevel(User user, boolean isUpgrade) {
         User userUpdate = userDao.get(user.getId());
-        assertThat(userUpdate.getLevel()).isEqualTo(level);
+        assertThat(userUpdate.getLevel() != user.getLevel()).isEqualTo(isUpgrade);
     }
 }
