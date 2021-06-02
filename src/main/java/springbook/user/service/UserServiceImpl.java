@@ -1,14 +1,18 @@
 package springbook.user.service;
 
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.User;
 
-import javax.sql.DataSource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
+import java.util.Properties;
 
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
@@ -39,6 +43,23 @@ public class UserServiceImpl implements UserService {
         if (userLevelUpgradePolicy.canUpgradeLevel(user)) {
             userLevelUpgradePolicy.upgradeLevel(user);
             userDao.update(user);
+        }
+        sendUpgradeEmail(user);
+    }
+
+    private void sendUpgradeEmail(User user) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "mail.ksug.org");
+        Session session = Session.getInstance(props);
+
+        MimeMessage message = new MimeMessage(session);
+        try{
+            message.setFrom(new InternetAddress("fjzjqhdl@gmail.com"));
+            message.addRecipients(Message.RecipientType.TO, String.valueOf(new InternetAddress(user.getEmail())));
+            message.setSubject("Upgrade안내");
+            message.setText("님 등급업 : " + user.getLevel());
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 

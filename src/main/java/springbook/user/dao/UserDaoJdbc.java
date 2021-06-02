@@ -19,6 +19,7 @@ public class UserDaoJdbc implements UserDao {
         user.setLevel(Level.valueOf(rs.getInt("level")));
         user.setLogin(rs.getInt("login"));
         user.setRecommend(rs.getInt("recommend"));
+        user.setEmail(rs.getString("email"));
         return user;
     };
     private JdbcTemplate jdbcTemplate;
@@ -29,11 +30,11 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void add(final User user) {
-        String sql = "INSERT INTO users (id, name, password, level, login, recommend) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO users (id, name, password, level, login, recommend, email) VALUES (?,?,?,?,?,?,?)";
         jdbcTemplate.update(sql, user.getId(),
                 user.getName(), user.getPassword(),
                 user.getLevel().getValue(),
-                user.getLogin(), user.getRecommend());
+                user.getLogin(), user.getRecommend(), user.getEmail());
     }
 
     @Override
@@ -65,10 +66,10 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void update(User user) {
         String sql = "update USERS set name = ?, password = ?, level = ?, login = ?, " +
-                "recommend = ? where id = ? ";
+                "recommend = ?, email = ? where id = ? ";
         this.jdbcTemplate.update(sql, user.getName(), user.getPassword(),
                 user.getLevel().getValue(),
                 user.getLogin(), user.getRecommend(),
-                user.getId());
+                user.getEmail(), user.getId());
     }
 }

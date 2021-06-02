@@ -33,11 +33,11 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         users = Arrays.asList(
-                new User("wedge1", "웨지", "p1", Level.BASIC, Level.MIN_LOGCOUNT_WITH_SILVER - 1, 0),
-                new User("wedge2", "웨지", "p2", Level.BASIC, Level.MIN_LOGCOUNT_WITH_SILVER, 0),
-                new User("wedge3", "웨지", "p3", Level.SILVER, 60, Level.MIN_RECOMMEND_WITH_GOLD - 1),
-                new User("wedge4", "웨지", "p4", Level.SILVER, 60, Level.MIN_RECOMMEND_WITH_GOLD),
-                new User("wedge5", "웨지", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+                new User("wedge1", "웨지", "p1", Level.BASIC, Level.MIN_LOGCOUNT_WITH_SILVER - 1, 0, "fjzjqhdl@gmail.com"),
+                new User("wedge2", "웨지", "p2", Level.BASIC, Level.MIN_LOGCOUNT_WITH_SILVER, 0, "fjzjqhdl@gmail.com"),
+                new User("wedge3", "웨지", "p3", Level.SILVER, 60, Level.MIN_RECOMMEND_WITH_GOLD - 1, "fjzjqhdl@gmail.com"),
+                new User("wedge4", "웨지", "p4", Level.SILVER, 60, Level.MIN_RECOMMEND_WITH_GOLD, "fjzjqhdl@gmail.com"),
+                new User("wedge5", "웨지", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "fjzjqhdl@gmail.com")
         );
     }
 
