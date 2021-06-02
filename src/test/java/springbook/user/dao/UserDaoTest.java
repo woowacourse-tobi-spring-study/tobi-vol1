@@ -60,6 +60,25 @@ class UserDaoTest {
     }
 
     @Test
+    void 유저를_수정한다(){
+        //given
+        //when
+        //then
+        userDao.deleteAll();
+
+        userDao.add(wedge);
+        wedge.setName("성시형");
+        wedge.setLevel(Level.GOLD);
+        wedge.setLogin(1000);
+        wedge.setRecommend(999);
+
+        userDao.update(wedge);
+
+        User user1update = userDao.get(wedge.getId());
+        두_유저가_동일한지_확인한다(wedge, user1update);
+    }
+
+    @Test
     void 유저가_없다면_박살난다() {
         //given
         //when
@@ -75,12 +94,18 @@ class UserDaoTest {
         userDao.add(wedge);
         //then
         User expectedWedge = userDao.get(wedge.getId());
-        assertThat(expectedWedge).isEqualTo(wedge);
-        assertThat(expectedWedge.getName()).isEqualTo(wedge.getName());
-        assertThat(expectedWedge.getPassword()).isEqualTo(wedge.getPassword());
-        assertThat(expectedWedge.getLevel()).isEqualTo(wedge.getLevel());
-        assertThat(expectedWedge.getLogin()).isEqualTo(wedge.getLogin());
-        assertThat(expectedWedge.getRecommend()).isEqualTo(wedge.getRecommend());
+        두_유저가_동일한지_확인한다(expectedWedge, wedge);
+    }
+
+    @Test
+    void 두_유저가_동일한지_확인한다(User user1, User user2){
+        assertThat(user1).isEqualTo(user2);
+        assertThat(user1.getName()).isEqualTo(user2.getName());
+        assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
+        assertThat(user1.getLevel()).isEqualTo(user2.getLevel());
+        assertThat(user1.getLogin()).isEqualTo(user2.getLogin());
+        assertThat(user1.getRecommend()).isEqualTo(user2.getRecommend());
+
     }
 
     @Test
