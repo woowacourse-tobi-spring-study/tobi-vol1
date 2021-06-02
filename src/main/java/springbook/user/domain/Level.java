@@ -17,11 +17,10 @@ public enum Level {
         return value;
     }
 
-    public int valueOf(int value){
+    public static Level valueOf(int value){
         return Arrays.stream(Level.values())
                 .filter(level -> level.value == value)
                 .findAny()
-                .orElseThrow(()-> new IllegalArgumentException("해당 value를 가진 Level이 없습니다."))
-                .getValue();
+                .orElseThrow(()-> new IllegalArgumentException("해당 value를 가진 Level이 없습니다."));
     }
 }
