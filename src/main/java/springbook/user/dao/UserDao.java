@@ -2,6 +2,8 @@ package springbook.user.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.user.User;
+import springbook.user.dao.strategy.statement.DeleteAllStatement;
+import springbook.user.dao.strategy.statement.StatementStrategy;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -56,12 +58,19 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
+        StatementStrategy strategy = new DeleteAllStatement();
+        jdbcContextWithStatementStrategy(strategy);
+    }
+
+    public void jdbcContextWithStatementStrategy(StatementStrategy strategy) throws SQLException {
         Connection c = null;
         PreparedStatement ps = null;
 
         try {
             c = dataSource.getConnection();
-            ps = c.prepareStatement("DELETE FROM users");
+
+            ps = strategy.makePreparedStatement(c);
+
             ps.executeUpdate();
         } catch (SQLException e) {
             throw e;
