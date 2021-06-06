@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringJUnitConfig
-@ContextConfiguration(locations = "/applicationContext.xml")
+@ContextConfiguration(locations = "/test-applicationContext.xml")
 class UserDaoTest {
     @Autowired
     UserDao userDao;
@@ -26,10 +26,6 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        userDao.setDataSource(new SingleConnectionDataSource(
-                "jdbc:mysql://localhost/testdb?serverTimezone=UTC", "root", "1234", true
-        ));
-
         user1 = new User("gyumee", "박성철", "springno1");
         user2 = new User("leegw700", "이길원", "springno2");
         user3 = new User("bumjin", "박범진", "springno3");
