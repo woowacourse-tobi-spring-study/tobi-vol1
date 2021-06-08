@@ -2,11 +2,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user.dao.UserDao;
 import user.domain.User;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -17,6 +22,9 @@ public class UserDaoTest {
 
     @Autowired
     private UserDao dao;
+
+    @Autowired
+    DataSource dataSource;
 
     @Test
     public void addAndGet() {
@@ -79,5 +87,22 @@ public class UserDaoTest {
         final User user1 = new User("hello1", "world1", "pw1");
         dao.add(user1);
         dao.add(user1);
+    }
+
+    @Test
+    public void sqlExceptionTranslate() {
+        dao.deleteAll();
+
+        try {
+            final User user1 = new User("hello1", "world1", "pw1");
+            dao.add(user1);
+            dao.add(user1);
+        } catch (DuplicateKeyException e) {
+            SQLException sqlEx = (SQLException) e.getRootCause();
+            SQLExceptionTranslator SQLET = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
+
+            final DataAccessException dataAccessException = SQLET.translate(null, null, sqlEx);
+            assertThat(dataAccessException).isInstanceOf(DuplicateKeyException.class);
+        }
     }
 }
