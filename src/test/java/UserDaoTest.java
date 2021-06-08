@@ -1,6 +1,7 @@
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user.dao.UserDao;
@@ -69,5 +70,14 @@ public class UserDaoTest {
         final List<User> users = dao.getAll();
         System.out.println("users = " + users);
         assertThat(users.size()).isEqualTo(3);
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void duplicateKey() {
+        dao.deleteAll();
+
+        final User user1 = new User("hello1", "world1", "pw1");
+        dao.add(user1);
+        dao.add(user1);
     }
 }
