@@ -6,7 +6,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user.dao.UserDao;
 import user.domain.User;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -19,7 +18,7 @@ public class UserDaoTest {
     private UserDao dao;
 
     @Test
-    public void addAndGet() throws SQLException, ClassNotFoundException {
+    public void addAndGet() {
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
 
@@ -43,7 +42,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void getCount() throws SQLException, ClassNotFoundException {
+    public void getCount() {
         dao.deleteAll();
         final User user1 = new User("hello1", "world1", "pw1");
         final User user2 = new User("hello2", "world2", "pw2");
