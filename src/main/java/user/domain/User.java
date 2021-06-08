@@ -1,5 +1,7 @@
 package user.domain;
 
+import java.util.Objects;
+
 public class User {
     String id;
     String name;

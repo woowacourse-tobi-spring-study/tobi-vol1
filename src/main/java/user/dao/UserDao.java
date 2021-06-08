@@ -7,8 +7,9 @@ import user.domain.User;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
-public class UserDao {
+public class UserDao implements UserDaoInterface {
     private JdbcTemplate jdbcTemplate;
 
     public UserDao(DataSource dataSource) {
@@ -25,6 +26,7 @@ public class UserDao {
         }
     };
 
+    @Override
     public void add(User user) {
         this.jdbcTemplate.update("insert into users (id, name, password) values (?, ?, ?)",
                 user.getId(),
@@ -32,14 +34,23 @@ public class UserDao {
                 user.getPassword());
     }
 
+    @Override
     public User get(String id) {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?", new Object[]{id}, userMapper);
     }
 
+    @Override
+    public List<User> getAll() {
+        final String sql = "select * from users";
+        return jdbcTemplate.query(sql, userMapper);
+    }
+
+    @Override
     public int getCount() {
         return this.jdbcTemplate.queryForObject("select count (*) from users", Integer.class);
     }
 
+    @Override
     public void deleteAll() {
         this.jdbcTemplate.update("delete from users");
     }
