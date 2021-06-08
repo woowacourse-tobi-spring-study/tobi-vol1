@@ -15,4 +15,6 @@ public interface UserDao {
     public int getCount();
 
     public List<User> getAll();
+
+    void update(User user1);
 }

@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import springbook.domain.user.Level;
 import springbook.domain.user.User;
 
 import javax.sql.DataSource;
@@ -43,9 +44,9 @@ class UserDaoJdbcTest {
     void setUp() {
         System.out.println(this);
         System.out.println(this.applicationContext);
-        user1 = new User("gyumee", "park", "springno1");
-        user2 = new User("leegw700", "lee", "springno2");
-        user3 = new User("bumjin", "박범진", "springno3");
+        user1 = new User("gyumee", "park", "springno1", "abc@naver.com", Level.BASIC, 1, 0);
+        user2 = new User("leegw700", "lee", "springno2", "abafddac@naver.com", Level.SILVER, 55, 10);
+        user3 = new User("bumjin", "박범진", "springno3", "abc11111@naver.com", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -58,12 +59,10 @@ class UserDaoJdbcTest {
         assertThat(userDao.getCount()).isEqualTo(2);
 
         User user1get = userDao.getUser(user1.getId());
-        assertThat(user1get.getName()).isEqualTo(user1.getName());
-        assertThat(user1get.getPassword()).isEqualTo(user1.getPassword());
+        assertThat(user1get).isEqualTo(user1);
 
         User user2get = userDao.getUser(user2.getId());
-        assertThat(user2get.getName()).isEqualTo(user2.getName());
-        assertThat(user2get.getPassword()).isEqualTo(user2.getPassword());
+        assertThat(user2get).isEqualTo(user2);
     }
 
     @Test
@@ -128,5 +127,25 @@ class UserDaoJdbcTest {
             SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
             assertThat(set.translate(null, null, sqlEx)).isInstanceOf(DataAccessException.class);
         }
+    }
+
+    @Test
+    void update() {
+        userDao.deleteAll();
+        userDao.addUser(user1);
+        userDao.addUser(user2);
+
+        user1.setName("another user");
+        user1.setPassword("another pass");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+
+        userDao.update(user1);
+        User user1Update = userDao.getUser(user1.getId());
+        User user2Get = userDao.getUser(user2.getId());
+
+        assertThat(user1Update.equals(user1)).isTrue();
+        assertThat(user2).isEqualTo(user2Get);
     }
 }
