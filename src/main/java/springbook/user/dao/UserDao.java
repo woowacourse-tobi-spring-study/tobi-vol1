@@ -2,6 +2,7 @@ package springbook.user.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.user.User;
+import springbook.user.dao.strategy.statement.AddStatement;
 import springbook.user.dao.strategy.statement.DeleteAllStatement;
 import springbook.user.dao.strategy.statement.StatementStrategy;
 
@@ -14,18 +15,8 @@ public class UserDao {
     public UserDao() { }
 
     public void add(User user) throws SQLException {
-        Connection c = dataSource.getConnection();
-
-        PreparedStatement ps = c.prepareStatement(
-                "insert into users(id, name, password) values (?,?,?)");
-        ps.setString(1, user.getId());
-        ps.setString(2, user.getName());
-        ps.setString(3, user.getPassword());
-
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+        StatementStrategy addStrategy = new AddStatement(user);
+        jdbcContextWithStatementStrategy(addStrategy);
     }
 
     public User get(String id) throws SQLException {
