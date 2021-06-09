@@ -1,6 +1,8 @@
 package dao;
 
+import domain.Level;
 import domain.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -14,51 +16,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserDaoJdbcTest {
 
-    @Test
-    @DisplayName("추가와 가지고오기")
-    public void addAndGet() throws SQLException {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDaoJdbc dao = context.getBean("userDaoJdbc", UserDaoJdbc.class);
-        User user = new User();
-        user.setId("asdf");
-        user.setName("asdf");
-        user.setPassword("asdf");
+    User user1;
+    User user2;
+    User user3;
 
-        dao.add(user);
-        User user2 = dao.get(user.getId());
-        assertThat(user2.getName()).isEqualTo(user.getName());
-        assertThat(user2.getPassword()).isEqualTo(user2.getPassword());
-
-        dao.deleteAll();
-        assertThat(dao.getCount()).isEqualTo(0);
-
-        User qwer = new User();
-        qwer.setId("qwer");
-        qwer.setName("qwer");
-        qwer.setPassword("qwer");
-
-        dao.add(qwer);
-        assertThat(dao.getCount()).isEqualTo(1);
-
-        User qwer2 = dao.get(qwer.getId());
-        assertThat(qwer2.getName()).isEqualTo(qwer.getName());
-        assertThat(qwer2.getPassword()).isEqualTo(qwer.getPassword());
-    }
-
-    @Test
-    @DisplayName("중복값 추가 확인")
-    public void duplicateData() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDaoJdbc", UserDao.class);
-        User user = new User();
-        user.setId("kang");
-        user.setName("seung");
-        user.setPassword("yoon");
-
-        dao.deleteAll();
-        dao.add(user);
-
-        assertThatThrownBy(() -> dao.add(user))
-                .isInstanceOf(DataAccessException.class);
+    @BeforeEach
+    void setUp() {
+        this.user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
+        this.user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
+        this.user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
     }
 }
