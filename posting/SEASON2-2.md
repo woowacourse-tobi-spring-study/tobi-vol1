@@ -76,7 +76,53 @@ DI의 가장 중요한 개념은 제 3자의 도움을 통해 두 오브젝트 �
 * 로컬 클래스(local class) :  메서드 레벨에 정의되는 내부 클래스
 * 익명 내부 클래스(anonymous inner class) : 이름을 갖지않는 내부 클래스
 
+```java
+public void add(final User user) throws SQLException {
+        StatementStrategy statementStrategy = new StatementStrategy() {
+            @Override
+            public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(
+                        "insert into users(id, name, password) values (?,?,?)");
+                ps.setString(1, user.getId());
+                ps.setString(2, user.getName());
+                ps.setString(3, user.getPassword());
+
+                return ps;
+            }
+        };
+        jdbcContextWithStatementStrategy(statementStrategy);
+    }
+```
+
 ### 익명 내부 클래스
 이름을 갖지 않는 내부 클래스. 클래스 선언과 오브젝트 생성이 결합된 형태로 만들어짐   
 생성자를 재사용할 필요가 없고, 구현한 인터페이스 타입으로만 사용할 경우에 편리합니다.
+
+```java
+public void add(final User user) throws SQLException {
+        jdbcContextWithStatementStrategy(
+        connection -> {
+        PreparedStatement ps = connection.prepareStatement(
+        "insert into users(id, name, password) values (?,?,?)");
+        ps.setString(1, user.getId());
+        ps.setString(2, user.getName());
+        ps.setString(3, user.getPassword());
+
+        return ps;
+        });
+        }
+```
+
+---
+
+## 컨텍스트와 DI
+
+위에서 사용한 구조를 전략 패턴의 구조로 보자면
+* 클라이언트(Client) : UserDao 의 메서드
+* 전략(Strategy) : 익명 내부 클래스로 만들어지는 것
+* 컨텍스트(Context) : jdbcContextWithStatementStrategy() 메서드
+
+jdbcContextWithStatementStrategy() 메서드는 PreparedStatement 를 실행하는 역할을 담당하고 있으니 이는 다른 DAO 에서도 사용가능하므로 클래스 밖으로 독립시켜서 다른 클래스에서도 사용가능 하도록 만드는 것이 좋습니다.
+
+즉, 클래스 단위의 범용성을 가진다면 클래스 분리를 통해 독립시켜주는 것입니다.
 
