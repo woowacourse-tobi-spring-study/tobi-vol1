@@ -9,7 +9,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import springbook.user.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -71,5 +73,35 @@ class UserDaoTest {
         assertEquals(userDao.getCount(), 0);
 
         assertThrows(EmptyResultDataAccessException.class, () -> userDao.get("unknown_id"));
+    }
+
+    @Test
+    public void getAll() throws SQLException {
+        userDao.deleteAll();
+
+        List<User> users0 = userDao.getAll();
+        assertThat(users0).hasSize(0);
+
+        userDao.add(user1);
+        List<User> users1 = userDao.getAll();
+        assertThat(users1).hasSize(1);
+        checkSameUser(user1, users1.get(0));
+
+        userDao.add(user2);
+        List<User> users2 = userDao.getAll();
+        assertThat(users2).hasSize(2);
+        checkSameUser(user1, users2.get(0));
+        checkSameUser(user2, users2.get(1));
+
+        userDao.add(user3);
+        List<User> users3 = userDao.getAll();
+        assertThat(users3).hasSize(3);
+        checkSameUser(user3, users3.get(0));
+        checkSameUser(user1, users3.get(1));
+        checkSameUser(user2, users3.get(2));
+    }
+
+    private void checkSameUser(User user, User otherUser) {
+        assertThat(user).isEqualTo(otherUser);
     }
 }

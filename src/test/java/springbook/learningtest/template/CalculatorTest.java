@@ -21,13 +21,16 @@ public class CalculatorTest {
 
     @Test
     public void sumOfNumbers() throws IOException {
-        int sum = calculator.calcSum(filePath);
-        assertThat(sum).isEqualTo(10);
+        assertThat(calculator.calcSum(filePath)).isEqualTo(10);
     }
 
     @Test
     public void multiplyOfNumbers() throws IOException {
-        int multiple = calculator.calcMultiply(filePath);
-        assertThat(multiple).isEqualTo(24);
+        assertThat(calculator.calcMultiply(filePath)).isEqualTo(24);
+    }
+
+    @Test
+    public void concatenateStrings() throws IOException {
+        assertThat(calculator.concatenate(filePath)).isEqualTo("1234");
     }
 }

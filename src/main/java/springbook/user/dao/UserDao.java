@@ -1,6 +1,8 @@
 package springbook.user.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import springbook.user.User;
 
 import javax.sql.DataSource;
@@ -8,10 +10,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserDao {
     private DataSource dataSource;
     private JdbcContext jdbcContext;
+    private JdbcTemplate jdbcTemplate;
 
     public UserDao() {
     }
@@ -20,6 +24,7 @@ public class UserDao {
         this.jdbcContext = new JdbcContext();
         this.jdbcContext.setDataSource(dataSource);
         this.dataSource = dataSource;
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public void add(final User user) throws SQLException {
@@ -103,5 +108,13 @@ public class UserDao {
                 }
             }
         }
+    }
+
+    public List<User> getAll() {
+        return this.jdbcTemplate.query("SELECT * FROM users", (resultSet, rowNum) -> new User(
+                resultSet.getString("id"),
+                resultSet.getString("name"),
+                resultSet.getString("password")
+        ));
     }
 }
