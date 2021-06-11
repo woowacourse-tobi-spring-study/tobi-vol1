@@ -65,8 +65,12 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
+        executeSql("DELETE FROM users");
+    }
+
+    private void executeSql(String sql) throws SQLException {
         jdbcContext.workWithStatementStrategy(connection ->
-                connection.prepareStatement("DELETE FROM users")
+                connection.prepareStatement(sql)
         );
     }
 
