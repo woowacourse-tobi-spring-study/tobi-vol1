@@ -2,19 +2,24 @@ package springbook.user.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.user.User;
-import springbook.user.dao.strategy.statement.StatementStrategy;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
     private DataSource dataSource;
     private JdbcContext jdbcContext;
 
-    public UserDao() { }
+    public UserDao() {
+    }
 
-    public void setJdbcContext(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcContext = new JdbcContext();
+        this.jdbcContext.setDataSource(dataSource);
+        this.dataSource = dataSource;
     }
 
     public void add(final User user) throws SQLException {
@@ -61,7 +66,7 @@ public class UserDao {
 
     public void deleteAll() throws SQLException {
         jdbcContext.workWithStatementStrategy(connection ->
-            connection.prepareStatement("DELETE FROM users")
+                connection.prepareStatement("DELETE FROM users")
         );
     }
 
@@ -78,28 +83,27 @@ public class UserDao {
             rs = ps.executeQuery();
             rs.next();
             return rs.getInt(1);
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw e;
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException e) { }
+                } catch (SQLException e) {
+                }
             }
             if (ps != null) {
                 try {
                     ps.close();
-                } catch (SQLException e) { }
+                } catch (SQLException e) {
+                }
             }
             if (c != null) {
                 try {
                     c.close();
-                } catch (SQLException e) { }
+                } catch (SQLException e) {
+                }
             }
         }
-    }
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
     }
 }
