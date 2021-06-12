@@ -20,37 +20,9 @@ public abstract class UserDao {
         this.connectionMaker = connectionMaker;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = null;
-        PreparedStatement ps = null;
-
-        try {
-            c = dataSource.getConnection();
-
-            ps = c.prepareStatement(
-                    "insert into users(id, name, password) values(?, ?, ?)");
-            ps.setString(1, user.getId());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getPassword());
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    //ps.close() 에서도 SQLException이 발생할 수 있기 때문에 잡아줌
-                }
-            }
-            if (c != null) {
-                try {
-                    c.close(); //Connection 반환
-                } catch (SQLException e) {
-                }
-            }
-        }
+    public void add(User user) throws SQLException {
+        StatementStrategy st = new AddStatement(user);
+        jdbcContextWithStatementStrategy(st);
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
