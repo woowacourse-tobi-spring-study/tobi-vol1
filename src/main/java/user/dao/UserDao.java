@@ -61,12 +61,30 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        Connection c = dataSource.getConnection();
-        PreparedStatement ps = c.prepareStatement("delete from users");
+        Connection c = null;
+        PreparedStatement ps = null;
 
-        ps.executeUpdate();
-        ps.close();
-        c.close();
+        try {
+            c = dataSource.getConnection();
+            ps = c.prepareStatement("delete from users");
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    //ps.close() 에서도 SQLException이 발생할 수 있기 때문에 잡아줌
+                }
+            }
+        }
+        if (c != null) {
+            try {
+                c.close(); //Connection 반환
+            } catch (SQLException e) {
+            }
+        }
     }
 
     public int getCount() throws SQLException {
