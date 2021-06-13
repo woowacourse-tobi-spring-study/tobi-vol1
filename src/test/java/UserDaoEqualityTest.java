@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
-import user.dao.UserDao;
+import user.dao.UserDaoJdbc;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -10,8 +10,8 @@ public class UserDaoEqualityTest {
     @Test
     void equalityTest() {
         ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao1 = context.getBean("userDao", UserDao.class);
-        UserDao dao2 = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc dao1 = context.getBean("userDao", UserDaoJdbc.class);
+        UserDaoJdbc dao2 = context.getBean("userDao", UserDaoJdbc.class);
         System.out.println("dao1 = " + dao1);
         System.out.println("dao2 = " + dao2);
         assertThat(dao1).isEqualTo(dao2);
@@ -19,16 +19,16 @@ public class UserDaoEqualityTest {
 
     @Test
     void DirtiesTest() {
-        UserDao dao1 = dirtiesUserDao();
-        UserDao dao2 = dirtiesUserDao();
+        UserDaoJdbc dao1 = dirtiesUserDao();
+        UserDaoJdbc dao2 = dirtiesUserDao();
         System.out.println("dao1 = " + dao1);
         System.out.println("dao2 = " + dao2);
         assertThat(dao1).isNotEqualTo(dao2);
     }
 
     @DirtiesContext
-    private UserDao dirtiesUserDao() {
+    private UserDaoJdbc dirtiesUserDao() {
         ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        return context.getBean("userDao", UserDao.class);
+        return context.getBean("userDao", UserDaoJdbc.class);
     }
 }

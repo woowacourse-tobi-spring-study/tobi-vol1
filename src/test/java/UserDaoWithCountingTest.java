@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import user.connection.CountingConnectionMaker;
 import user.domain.User;
-import user.dao.UserDao;
+import user.dao.UserDaoJdbc;
 
 import java.sql.SQLException;
 
@@ -12,7 +12,7 @@ public class UserDaoWithCountingTest {
     @Test
     public void addAndGet() throws SQLException, ClassNotFoundException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc dao = context.getBean("userDao", UserDaoJdbc.class);
 
         dao.deleteAll();
 
