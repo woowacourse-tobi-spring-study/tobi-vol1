@@ -3,6 +3,9 @@ package user.domain;
 import java.util.Objects;
 
 public class User {
+    public static final int MINIMUM_LOGIN_FOR_SILVER = 50;
+    public static final int MINIMUM_RECOMMEND_FOR_GOLD = 30;
+
     String id;
     String name;
     String password;
@@ -23,17 +26,24 @@ public class User {
     }
 
     public boolean upgradeLevel() {
-        if (level == Level.BASIC && login >= 50) {
-            level = Level.SILVER;
+        if (level == Level.BASIC && login >= MINIMUM_LOGIN_FOR_SILVER) {
+            userLevelUp();
             return true;
         }
 
-        if (level == Level.SILVER && recommend >= 30) {
-            level = Level.GOLD;
+        if (level == Level.SILVER && recommend >= MINIMUM_RECOMMEND_FOR_GOLD) {
+            userLevelUp();
             return true;
         }
 
         return false;
+    }
+
+    private void userLevelUp() {
+        if (Objects.isNull(level.nextLevel())) {
+            throw new IllegalStateException(level + "은 레벨업이 불가합니다.");
+        }
+        level = level.nextLevel();
     }
 
     public void checkNewbie() {
