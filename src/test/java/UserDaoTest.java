@@ -1,19 +1,16 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import user.dao.UserDao;
 import user.domain.User;
 
-import java.sql.SQLException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="/applicationContext.xml")
+@SpringJUnitConfig
 public class UserDaoTest {
     @Autowired
     private ApplicationContext context;
@@ -62,5 +59,37 @@ public class UserDaoTest {
 
         dao.add(user3);
         assertThat(dao.getCount(), is(3));
+    }
+
+    @Test
+    void getAll() {
+        dao.deleteAll();
+
+        List<User> users0 = dao.getAll();
+        assertThat(users0.size()).isEqualTo(0);
+
+        dao.add(user1);
+        List<User> users1 = dao.getAll();
+        assertThat(users1.size()).isEqualTo(1);
+        checkSameUser(user1, users1.get(0));
+
+        dao.add(user2);
+        List<User> users2 = dao.getAll();
+        assertThat(users2.size()).isEqualTo(2);
+        checkSameUser(user1, users2.get(0));
+        checkSameUser(user2, users2.get(1));
+
+        dao.add(user3);
+        List<User> users3 = dao.getAll();
+        assertThat(users3.size()).isEqualTo(3);
+        checkSameUser(user1, users3.get(0));
+        checkSameUser(user2, users3.get(1));
+        checkSameUser(user3, users3.get(2));
+    }
+
+    private void checkSameUser(User user1, User user2) {
+        assertThat(user1.getId()).isEqualTo(user2.getId());
+        assertThat(user1.getName()).isEqualTo(user2.getName());
+        assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
     }
 }

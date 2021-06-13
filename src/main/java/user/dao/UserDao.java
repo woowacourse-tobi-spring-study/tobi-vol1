@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public abstract class UserDao {
 
@@ -39,6 +40,21 @@ public abstract class UserDao {
     public User get(String id) {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?",
                 new Object[]{id},
+                new RowMapper<User>() {
+                    @Override
+                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setName(rs.getString("name"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                }
+        );
+    }
+
+    public List<User> getAll() {
+        return this.jdbcTemplate.query("select * from users order by id",
                 new RowMapper<User>() {
                     @Override
                     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
