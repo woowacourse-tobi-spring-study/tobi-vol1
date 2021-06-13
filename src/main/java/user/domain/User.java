@@ -1,5 +1,7 @@
 package user.domain;
 
+import java.util.Objects;
+
 public class User {
     String id;
     String name;
@@ -18,6 +20,26 @@ public class User {
     }
 
     public User() {
+    }
+
+    public boolean upgradeLevel() {
+        if (level == Level.BASIC && login >= 50) {
+            level = Level.SILVER;
+            return true;
+        }
+
+        if (level == Level.SILVER && recommend >= 30) {
+            level = Level.GOLD;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void checkNewbie() {
+        if (Objects.isNull(level)) {
+            level = Level.BASIC;
+        }
     }
 
     public void setId(String id) {
