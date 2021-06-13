@@ -1,4 +1,4 @@
-package template;
+package training.template;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

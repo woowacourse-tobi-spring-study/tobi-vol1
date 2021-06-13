@@ -1,8 +1,10 @@
+package user.dao;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
-import user.dao.UserDaoJdbc;
+import user.DaoFactory;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 

@@ -1,3 +1,5 @@
+package user.dao;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +10,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user.dao.UserDao;
+import user.DaoFactoryForTest;
 import user.domain.Level;
 import user.domain.User;
 
@@ -22,8 +24,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ContextConfiguration(classes = DaoFactoryForTest.class)
 public class UserDaoTest {
 
-    @Autowired UserDao dao;
-    @Autowired DataSource dataSource;
+    @Autowired
+    UserDao dao;
+    @Autowired
+    DataSource dataSource;
 
     final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
     final User user2 = new User("hello2", "world2", "pw2", Level.SILVER, 55, 10);
