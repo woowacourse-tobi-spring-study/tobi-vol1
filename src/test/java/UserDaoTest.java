@@ -22,11 +22,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ContextConfiguration(classes = DaoFactoryForTest.class)
 public class UserDaoTest {
 
-    @Autowired
-    private UserDao dao;
+    @Autowired UserDao dao;
+    @Autowired DataSource dataSource;
 
-    @Autowired
-    DataSource dataSource;
+    final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
+    final User user2 = new User("hello2", "world2", "pw2", Level.SILVER, 55, 10);
+    final User user3 = new User("hello3", "world3", "pw3", Level.GOLD, 100, 40);
 
     @Before
     public void setUp() {
@@ -35,12 +36,10 @@ public class UserDaoTest {
 
     @Test
     public void addAndGet() {
-        final User user = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
-        dao.add(user);
+        dao.add(user1);
 
-        final User daoUser = dao.get(user.getId());
-        checkSameUser(user, daoUser);
-
+        final User daoUser = dao.get(user1.getId());
+        checkSameUser(user1, daoUser);
         assertThat(dao.getCount()).isEqualTo(1);
     }
 
@@ -54,11 +53,26 @@ public class UserDaoTest {
     }
 
     @Test
-    public void getCount() {
-        final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
-        final User user2 = new User("hello2", "world2", "pw2", Level.SILVER, 55, 10);
-        final User user3 = new User("hello3", "world3", "pw3", Level.GOLD, 100, 40);
+    public void updateUser() {
+        dao.add(user1);
+        dao.add(user2);
 
+        user1.setName("바람인가요");
+        user1.setPassword("그대와상관없는~");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+
+        dao.update(user1);
+
+        final User daoUser1 = dao.get(user1.getId());
+        checkSameUser(user1, daoUser1);
+        final User daoUser2 = dao.get(user2.getId());
+        checkSameUser(user2, daoUser2);
+    }
+
+    @Test
+    public void getCount() {
         dao.add(user1);
         dao.add(user2);
         dao.add(user3);
@@ -68,10 +82,6 @@ public class UserDaoTest {
 
     @Test
     public void getAll() {
-        final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
-        final User user2 = new User("hello2", "world2", "pw2", Level.SILVER, 55, 10);
-        final User user3 = new User("hello3", "world3", "pw3", Level.GOLD, 100, 40);
-
         dao.add(user1);
         dao.add(user2);
         dao.add(user3);
@@ -82,7 +92,6 @@ public class UserDaoTest {
 
     @Test(expected = DataAccessException.class)
     public void duplicateKey() {
-        final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
         dao.add(user1);
         dao.add(user1);
     }
@@ -90,7 +99,6 @@ public class UserDaoTest {
     @Test
     public void sqlExceptionTranslate() {
         try {
-            final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
             dao.add(user1);
             dao.add(user1);
         } catch (DuplicateKeyException e) {
