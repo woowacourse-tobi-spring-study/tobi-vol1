@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -12,7 +13,6 @@ import user.dao.UserDao;
 import user.domain.Level;
 import user.domain.User;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +29,9 @@ public class UserServiceTest {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    MailSender mailSender;
 
     @Autowired
     PlatformTransactionManager platformTransactionManager;
@@ -89,7 +92,7 @@ public class UserServiceTest {
 
     @Test
     public void upgradeAllOrNothingTransactional() {
-        final UserService testUserService = new TestUserService(userDao, platformTransactionManager, users.get(3).getId());
+        final UserService testUserService = new TestUserService(userDao, platformTransactionManager, mailSender, users.get(3).getId());
 
         users.forEach(user -> userDao.add(user));
 
