@@ -25,21 +25,19 @@ public class User {
     public User() {
     }
 
-    public boolean upgradeLevel() {
+    public boolean canUpgradeLevel() {
         if (level == Level.BASIC && login >= MINIMUM_LOGIN_FOR_SILVER) {
-            userLevelUp();
             return true;
         }
 
         if (level == Level.SILVER && recommend >= MINIMUM_RECOMMEND_FOR_GOLD) {
-            userLevelUp();
             return true;
         }
 
         return false;
     }
 
-    private void userLevelUp() {
+    public void upgradeLevel() {
         if (Objects.isNull(level.nextLevel())) {
             throw new IllegalStateException(level + "은 레벨업이 불가합니다.");
         }

@@ -24,9 +24,11 @@ public class UserTest {
         user.setRecommend(100);
         user.upgradeLevel();
         assertThat(user.getLevel()).isEqualTo(Level.GOLD);
+    }
 
+    @Test(expected = IllegalStateException.class)
+    public void cannotUpgradeLevel() {
         user.setLevel(Level.GOLD);
         user.upgradeLevel();
-        assertThat(user.getLevel()).isEqualTo(Level.GOLD);
     }
 }
