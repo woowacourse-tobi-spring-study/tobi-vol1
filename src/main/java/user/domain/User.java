@@ -5,6 +5,7 @@ import java.util.Objects;
 public class User {
     public static final int MINIMUM_LOGIN_FOR_SILVER = 50;
     public static final int MINIMUM_RECOMMEND_FOR_GOLD = 30;
+    public static final String DEFAULT_EMAIL = "mail@mail.com";
 
     String id;
     String name;
@@ -25,7 +26,11 @@ public class User {
     }
 
     public User(String id, String name, String password, Level level, int login, int recommend) {
-        this(id, name, password, level, login, recommend, "joel610@naver.com");
+        this(id, name, password, level, login, recommend, DEFAULT_EMAIL);
+    }
+
+    public User(String id, String name, String password, int level, int login, int recommend) {
+        this(id, name, password, Level.valueOf(level), login, recommend, DEFAULT_EMAIL);
     }
 
     public User() {
@@ -82,6 +87,10 @@ public class User {
 
     public void setRecommend(int recommend) {
         this.recommend = recommend;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getId() {

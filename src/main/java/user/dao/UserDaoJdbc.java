@@ -18,14 +18,14 @@ public class UserDaoJdbc implements UserDao {
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            final User user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-            user.setLevel(rs.getInt("level"));
-            user.setLogin(rs.getInt("login"));
-            user.setRecommend(rs.getInt("recommend"));
-            return user;
+            final String id = rs.getString("id");
+            final String name = rs.getString("name");
+            final String password = rs.getString("password");
+            final int level = rs.getInt("level");
+            final int login = rs.getInt("login");
+            final int recommend = rs.getInt("recommend");
+
+            return new User(id, name, password, level, login, recommend);
         }
     };
 

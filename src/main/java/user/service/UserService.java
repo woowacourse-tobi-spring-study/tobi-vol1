@@ -21,6 +21,10 @@ public class UserService {
         this.mailSender = mailSender;
     }
 
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
     public void add(User user) {
         user.checkNewbie();
         userDao.add(user);
