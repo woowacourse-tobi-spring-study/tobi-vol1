@@ -11,22 +11,21 @@ import user.service.UserService;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
-import java.sql.SQLException;
 
 @Configuration
 public class DaoFactory {
     @Bean
-    public UserService userService() throws SQLException {
+    public UserService userService() {
         return new UserService(userDao());
     }
 
     @Bean
-    public UserDaoJdbc userDao() throws SQLException {
+    public UserDaoJdbc userDao() {
         return new UserDaoJdbc(dataSource());
     }
 
     @Bean
-    public JdbcContext jdbcContext() throws SQLException {
+    public JdbcContext jdbcContext() {
         return new JdbcContext(dataSource());
     }
 
@@ -36,13 +35,13 @@ public class DaoFactory {
     }
 
     @Bean
-    public DataSource dataSource() throws SQLException {
-        Driver mysqlDriver = new com.mysql.cj.jdbc.Driver();
+    public DataSource dataSource() {
+        Driver h2Driver = new org.h2.Driver();
         return new SimpleDriverDataSource(
-                mysqlDriver,
-                "jdbc:mysql://localhost:13306/springbook",
-                "root",
-                "root");
+                h2Driver,
+                "jdbc:h2:tcp://localhost/~/test",
+                "sa",
+                "");
     }
 }
 

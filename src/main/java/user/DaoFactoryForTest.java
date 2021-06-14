@@ -11,22 +11,21 @@ import user.service.UserService;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
-import java.sql.SQLException;
 
 @Configuration
 public class DaoFactoryForTest {
     @Bean
-    public UserService userService() throws SQLException {
+    public UserService userService() {
         return new UserService(userDao());
     }
 
     @Bean
-    public UserDaoJdbc userDao() throws SQLException {
+    public UserDaoJdbc userDao() {
         return new UserDaoJdbc(dataSource());
     }
 
     @Bean
-    public JdbcContext jdbcContext() throws SQLException {
+    public JdbcContext jdbcContext() {
         return new JdbcContext(dataSource());
     }
 
@@ -36,7 +35,7 @@ public class DaoFactoryForTest {
     }
 
     @Bean
-    public DataSource dataSource() throws SQLException {
+    public DataSource dataSource() {
         Driver h2Driver = new org.h2.Driver();
         return new SimpleDriverDataSource(
                 h2Driver,
