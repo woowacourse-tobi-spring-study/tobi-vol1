@@ -22,6 +22,10 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-context', version: '3.2.18.RELEASE'
     implementation group: 'org.springframework', name: 'spring-core', version: '3.1.4.RELEASE'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.0.8.RELEASE'
+
+    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
+    implementation group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
+    implementation group: 'org.springframework', name: 'spring-context-support', version: '5.2.12.RELEASE'
 }
 
 test {

@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 import user.connection.ConnectionMaker;
 import user.connection.TestConnectionMaker;
@@ -18,7 +20,14 @@ import java.sql.Driver;
 public class DaoFactoryForTest {
     @Bean
     public UserService userService() {
-        return new UserService(userDao(), platformTransactionManager());
+        return new UserService(userDao(), platformTransactionManager(), mailSender());
+    }
+
+    @Bean
+    public MailSender mailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("mail.server.com");
+        return mailSender;
     }
 
     @Bean
