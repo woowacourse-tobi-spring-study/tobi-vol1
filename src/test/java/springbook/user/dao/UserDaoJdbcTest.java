@@ -3,6 +3,7 @@ package springbook.user.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -11,6 +12,7 @@ import springbook.user.User;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -64,6 +66,15 @@ class UserDaoJdbcTest {
         User userGet2 = userDao.get(user2.getId());
         assertEquals(userGet2.getName(), user2.getName());
         assertEquals(userGet2.getPassword(), user2.getPassword());
+    }
+
+    @Test
+    public void duplicateKey() {
+        userDao.deleteAll();
+
+        userDao.add(user1);
+
+        assertThatThrownBy(() -> userDao.add(user1)).isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test
