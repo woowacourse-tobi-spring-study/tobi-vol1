@@ -8,7 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import springbook.user.User;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringJUnitConfig
 @ContextConfiguration(locations = "/test-applicationContext.xml")
-class UserDaoTest {
+class UserDaoJdbcTest {
     @Autowired
     UserDao userDao;
 
@@ -33,7 +32,7 @@ class UserDaoTest {
     }
 
     @Test
-    public void count() throws SQLException {
+    public void count() {
 
         userDao.deleteAll();
         assertEquals(userDao.getCount(), 0);
@@ -49,7 +48,7 @@ class UserDaoTest {
     }
 
     @Test
-    public void addAndGet() throws SQLException {
+    public void addAndGet() {
 
         userDao.deleteAll();
         assertEquals(userDao.getCount(), 0);
@@ -68,7 +67,7 @@ class UserDaoTest {
     }
 
     @Test
-    public void getUserFailure() throws SQLException {
+    public void getUserFailure() {
         userDao.deleteAll();
         assertEquals(userDao.getCount(), 0);
 
@@ -76,7 +75,7 @@ class UserDaoTest {
     }
 
     @Test
-    public void getAll() throws SQLException {
+    public void getAll() {
         userDao.deleteAll();
 
         List<User> users0 = userDao.getAll();

@@ -47,10 +47,10 @@ ApplicationContext 를 구현한 클래스는 여러 가지가 있습니다.
 
 빈을 가져올 때는 ApplicationContext 의 getBean() 메서드를 활용
 getBean(설정파일 메서드명, 리턴 타임 클래스)
-ex) getBean("userDao", UserDao.class)
+ex) getBean("userDaoJdbc", UserDao.class)
 
 > getBean 은 기본적으로 Object 타입을 리턴하게 되어있어서 매번 리턴되는 오브젝트에 다시 캐스팅 해줘야하 하는 부담이 있습니다.
-> (UserDao) context.getBean("userDao");
+> (UserDao) context.getBean("userDaoJdbc");
 > 때문에 두 번째 파라미터에 리턴 타입을 주면, 제네릭 메서드 방식을 사용해서 캐스팅 코드는 사용하지 않아도 됩니다. 
 
 
@@ -126,11 +126,11 @@ ApplicationContext는 빈 팩토리가 구현하는 BeanFactory 인터페이스�
 
 ## 2. 싱글톤 레지스트리와 오브젝트 스코프
 
-* DaoFactory 를 직접 사용하는것 (new DaoFactory().userDao()처럼 사용하는 것)
+* DaoFactory 를 직접 사용하는것 (new DaoFactory().userDaoJdbc()처럼 사용하는 것)
 * @Configuration 애너테이션을 추가해서 스프링의 애플리케이션 컨텍스트를 통해 사용하는 것
 위의 두가지는 어떤 차이가 있을까요?
 
-만약 DaoFactory(@Configuration을 붙이지 않은)을 사용해서 userDao() 메서드를 두번 호출해서 만든 UserDao 오브젝트는 동일한(identical) 오브젝트 일까?
+만약 DaoFactory(@Configuration을 붙이지 않은)을 사용해서 userDaoJdbc() 메서드를 두번 호출해서 만든 UserDao 오브젝트는 동일한(identical) 오브젝트 일까?
 
 > ### 오브젝트의 동일성과 동등성<br>
 > 자바에서 두 개의 오브젝트가 <br>
@@ -138,7 +138,7 @@ ApplicationContext는 빈 팩토리가 구현하는 BeanFactory 인터페이스�
 > 동일한 정보를 담고 있는(equivalent) 오브젝트라고 말하는 것 -> 동등성 비교, equals() 메서드 사용<br>
 > equals() 메서드를 따로 오버라이딩해서 구현하지 않으면 Object 의 equals() 메서드를 그대로 사용하는데 이는 두 오브젝트의 동일성을 비교해서 결과를 반환합니다.
 
-결론적으로 위의 DaoFactory 의 userDao() 메서드는 매번 다른 오브젝트를 생성해줍니다.<br>
+결론적으로 위의 DaoFactory 의 userDaoJdbc() 메서드는 매번 다른 오브젝트를 생성해줍니다.<br>
 하지만 스프링 애플리케이션 컨텍스를 사용해서 생성하는 UserDao 오브젝트는 매번 같은 오브젝트를 반환해줍니다.
 
 <hr>

@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CountingDaoFactory {
     @Bean
-    public UserDao userDao() {
-        return new UserDao();
+    public UserDaoJdbc userDao() {
+        return new UserDaoJdbc();
     }
 
     @Bean
