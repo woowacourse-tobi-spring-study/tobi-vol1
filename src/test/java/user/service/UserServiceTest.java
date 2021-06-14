@@ -11,10 +11,12 @@ import user.dao.UserDao;
 import user.domain.Level;
 import user.domain.User;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static user.domain.User.MINIMUM_LOGIN_FOR_SILVER;
 import static user.domain.User.MINIMUM_RECOMMEND_FOR_GOLD;
 
@@ -26,6 +28,9 @@ public class UserServiceTest {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    DataSource dataSource;
 
     List<User> users;
 
@@ -79,5 +84,21 @@ public class UserServiceTest {
 
         assertThat(daoUserWithLevel.getId()).isEqualTo(userWithLevel.getId());
         assertThat(daoUserWithoutLevel.getId()).isEqualTo(userWithoutLevel.getId());
+    }
+
+    @Test
+    public void upgradeAllOrNothingTransactional() {
+        final UserService testUserService = new TestUserService(userDao, users.get(3).getId());
+        testUserService.setDataSource(dataSource);
+
+        users.forEach(user -> userDao.add(user));
+
+        try {
+            testUserService.upgradeLevelsWithTransaction();
+            fail("Test User Service 실패!");
+        } catch (Exception e) {
+        }
+
+        checkLevelUpgraded(users.get(1), false);
     }
 }
