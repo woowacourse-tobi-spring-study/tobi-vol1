@@ -2,20 +2,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import user.dao.UserDao;
 import user.dao.UserDaoJdbc;
 import user.domain.User;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig
 public class UserDaoJdbcTest {
     @Autowired
     private ApplicationContext context;
-
-    private UserDaoJdbc dao;
+    @Autowired
+    private UserDao dao;
     private User user1;
     private User user2;
     private User user3;
@@ -29,7 +33,7 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    public void addAndGet() throws SQLException, ClassNotFoundException {
+    public void addAndGet() {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
@@ -47,7 +51,7 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    void count() throws SQLException {
+    void count() {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
@@ -59,6 +63,14 @@ public class UserDaoJdbcTest {
 
         dao.add(user3);
         assertThat(dao.getCount(), is(3));
+    }
+
+    @Test
+    void duplicateKey() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        assertThatThrownBy(() -> dao.add(user1)).isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test
