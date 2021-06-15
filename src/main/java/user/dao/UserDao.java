@@ -1,5 +1,6 @@
 package user.dao;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import user.DuplicateUserIdException;
@@ -31,15 +32,10 @@ public abstract class UserDao {
 
     public void add(final User user) throws DuplicateUserIdException {
         try {
-            // JDBC를 이용해 user 정보를 DB에 추가하는 코드
-//            this.jdbcTemplate.update("insert into users(id, name, password) values(?, ?, ?)",
-//                    user.getId(), user.getName(), user.getPassword());
-        } catch(SQLException e) {
-            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
-                throw new DuplicateUserIdException(e); // 예외 전환
-            } else {
-                throw new RuntimeException(e); // 예외 포장
-            }
+            this.jdbcTemplate.update("insert into users(id, name, password) values(?, ?, ?)",
+                    user.getId(), user.getName(), user.getPassword());
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateUserIdException(e);
         }
     }
 
