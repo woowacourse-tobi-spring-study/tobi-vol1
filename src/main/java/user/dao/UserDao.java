@@ -29,17 +29,16 @@ public abstract class UserDao {
         }
     };
 
-    public void add(final User user) throws DuplicateUserIdException, SQLException {
+    public void add(final User user) throws DuplicateUserIdException {
         try {
             // JDBC를 이용해 user 정보를 DB에 추가하는 코드
 //            this.jdbcTemplate.update("insert into users(id, name, password) values(?, ?, ?)",
 //                    user.getId(), user.getName(), user.getPassword());
         } catch(SQLException e) {
-            //ErrorCode가 MySQL의 "Duplicate Entry(1062)"이면 예외 전환
             if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
-                throw new DuplicateUserIdException();
+                throw new DuplicateUserIdException(e); // 예외 전환
             } else {
-                throw e; // 그 외의 경우는 SQLException 그대로
+                throw new RuntimeException(e); // 예외 포장
             }
         }
     }
