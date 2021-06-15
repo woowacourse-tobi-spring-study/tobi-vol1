@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import user.dao.UserDao;
+import user.dao.UserDaoJdbc;
 import user.domain.User;
 
 import java.util.List;
@@ -11,18 +11,18 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig
-public class UserDaoTest {
+public class UserDaoJdbcTest {
     @Autowired
     private ApplicationContext context;
 
-    private UserDao dao;
+    private UserDaoJdbc dao;
     private User user1;
     private User user2;
     private User user3;
 
     @BeforeEach
     void setUp() {
-        this.dao = context.getBean("userDao", UserDao.class);
+        this.dao = context.getBean("userDao", UserDaoJdbc.class);
         this.user1 = new User("xrabcde", "ara", "root");
         this.user2 = new User("xrabcd", "bada", "root");
         this.user2 = new User("xrabc", "ba", "root");
