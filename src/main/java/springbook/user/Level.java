@@ -15,11 +15,11 @@ public enum Level {
 
     public static Level valueOf(int value) {
         return Arrays.stream(values())
-                .filter(level -> level.getValue() == value)
+                .filter(level -> level.intValue() == value)
                 .findAny().orElseThrow(() -> new AssertionError("Unknown value: " + value));
     }
 
-    public int getValue() {
+    public int intValue() {
         return value;
     }
 }
