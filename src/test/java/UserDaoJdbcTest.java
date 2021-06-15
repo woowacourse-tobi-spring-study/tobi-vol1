@@ -2,34 +2,41 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import user.dao.UserDao;
+import user.dao.UserDaoJdbc;
 import user.domain.User;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig
-public class UserDaoTest {
-    @Autowired
-    private ApplicationContext context;
-
-    private UserDao dao;
+public class UserDaoJdbcTest {
+    @Autowired private ApplicationContext context;
+    @Autowired private UserDao dao;
+    @Autowired DataSource dataSource;
     private User user1;
     private User user2;
     private User user3;
 
     @BeforeEach
     void setUp() {
-        this.dao = context.getBean("userDao", UserDao.class);
+        this.dao = context.getBean("userDao", UserDaoJdbc.class);
         this.user1 = new User("xrabcde", "ara", "root");
         this.user2 = new User("xrabcd", "bada", "root");
         this.user2 = new User("xrabc", "ba", "root");
     }
 
     @Test
-    public void addAndGet() throws SQLException, ClassNotFoundException {
+    public void addAndGet() {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
@@ -47,7 +54,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void count() throws SQLException {
+    void count() {
         dao.deleteAll();
         assertThat(dao.getCount(), is(0));
 
@@ -59,6 +66,29 @@ public class UserDaoTest {
 
         dao.add(user3);
         assertThat(dao.getCount(), is(3));
+    }
+
+    @Test
+    void duplicateKey() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        assertThatThrownBy(() -> dao.add(user1)).isInstanceOf(DuplicateKeyException.class);
+    }
+
+    @Test
+    void sqlExceptionTranslate() {
+        dao.deleteAll();
+
+        try {
+            dao.add(user1);
+            dao.add(user1);
+;        } catch (DuplicateKeyException e) {
+            SQLException sqlException = (SQLException) e.getRootCause();
+            SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
+
+            assertThat(set.translate(null, null, sqlException)).isInstanceOf(DuplicateKeyException.class);
+        }
     }
 
     @Test

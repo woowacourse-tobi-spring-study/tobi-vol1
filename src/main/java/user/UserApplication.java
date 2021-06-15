@@ -1,14 +1,14 @@
 package user;
 
 import user.dao.DaoFactory;
-import user.dao.UserDao;
+import user.dao.UserDaoJdbc;
 import user.domain.User;
 
 import java.sql.SQLException;
 
 public class UserApplication {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        UserDao dao = new DaoFactory().userDao();
+        UserDaoJdbc dao = new DaoFactory().userDao();
 
         User user = new User();
         user.setId("xrabcde");
