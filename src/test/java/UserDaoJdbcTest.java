@@ -4,11 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import user.dao.UserDao;
 import user.dao.UserDaoJdbc;
 import user.domain.User;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,10 +20,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig
 public class UserDaoJdbcTest {
-    @Autowired
-    private ApplicationContext context;
-    @Autowired
-    private UserDao dao;
+    @Autowired private ApplicationContext context;
+    @Autowired private UserDao dao;
+    @Autowired DataSource dataSource;
     private User user1;
     private User user2;
     private User user3;
@@ -71,6 +74,21 @@ public class UserDaoJdbcTest {
 
         dao.add(user1);
         assertThatThrownBy(() -> dao.add(user1)).isInstanceOf(DuplicateKeyException.class);
+    }
+
+    @Test
+    void sqlExceptionTranslate() {
+        dao.deleteAll();
+
+        try {
+            dao.add(user1);
+            dao.add(user1);
+;        } catch (DuplicateKeyException e) {
+            SQLException sqlException = (SQLException) e.getRootCause();
+            SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
+
+            assertThat(set.translate(null, null, sqlException)).isInstanceOf(DuplicateKeyException.class);
+        }
     }
 
     @Test
