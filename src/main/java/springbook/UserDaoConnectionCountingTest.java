@@ -2,7 +2,7 @@ package springbook;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import springbook.user.User;
-import springbook.user.dao.CountingConnectionMaker;
+import springbook.user.dao.connection.CountingConnectionMaker;
 import springbook.user.dao.CountingDaoFactory;
 import springbook.user.dao.UserDaoJdbc;
 

@@ -1,5 +1,7 @@
 package springbook.user.dao;
 
+import springbook.user.dao.connection.SimpleConnectionMaker;
+
 public class SingletonUserDao {
     private static SingletonUserDao INSTANCE;
 
