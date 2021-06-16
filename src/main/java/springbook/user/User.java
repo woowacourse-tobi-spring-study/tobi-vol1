@@ -13,6 +13,10 @@ public class User {
     public User() {
     }
 
+    public User(String id, String name, String password, int login, int recommend) {
+        this(id, name, password, null, login, recommend);
+    }
+
     public User(String id, String name, String password, Level level, int login, int recommend) {
         this.id = id;
         this.name = name;

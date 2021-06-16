@@ -27,7 +27,7 @@ public class UserServiceTest {
     @BeforeEach
     public void setUp() {
         users = Arrays.asList(
-                new User("bumjin", "박범진", "p1", Level.BASIC, 49, 0),
+                new User("bumjin", "박범진", "p1", 49, 0),
                 new User("joytouch", "강명성", "p2", Level.BASIC, 50, 0),
                 new User("erwins", "신승한", "p3", Level.SILVER, 60, 29),
                 new User("madnite1", "이상호", "p4", Level.SILVER, 60, 30),
@@ -44,7 +44,7 @@ public class UserServiceTest {
     public void upgradeLevels() {
         userDao.deleteAll();
         for (User user : users) {
-            userDao.add(user);
+            userService.add(user);
         }
 
         userService.upgradeLevels();
@@ -59,5 +59,22 @@ public class UserServiceTest {
     private void checkLevel(User user, Level expectedLevel) {
         User userUpdate = userDao.get(user.getId());
         assertThat(userUpdate.getLevel()).isEqualTo(expectedLevel);
+    }
+
+    @Test
+    public void add() {
+        userDao.deleteAll();
+
+        User userWithLevel = users.get(4);
+        User userWithoutLevel = users.get(0);
+
+        userService.add(userWithLevel);
+        userService.add(userWithoutLevel);
+
+        User userWithLevelRead = userDao.get(userWithLevel.getId());
+        User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
+
+        assertThat(userWithLevelRead.getLevel()).isEqualTo(userWithLevel.getLevel());
+        assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
     }
 }
