@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:/test-applicationContext.xml")
-class UserServiceImplTest {
+class UserServiceTest {
 
     @Autowired
     private UserService userService;
@@ -39,6 +39,9 @@ class UserServiceImplTest {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
+    @Autowired
+    private UserLevelUpgradePolicy userLevelUpgradePolicy;
+
     private List<User> users;
 
     @BeforeEach
@@ -54,24 +57,31 @@ class UserServiceImplTest {
 
     @Test
     void upgradeLevels() {
-        userDao.deleteAll();
-        users.forEach(user -> userDao.addUser(user));
+        UserServiceImpl userServiceImpl = new UserServiceImpl();
+
+        MockUserDao mockUserDao = new MockUserDao(users);
+        userServiceImpl.setUserDao(mockUserDao);
 
         MockMailSender mailSender = new MockMailSender();
         userServiceImpl.setMailSender(mailSender);
+        userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
 
-        userService.upgradeLevels();
+        userServiceImpl.upgradeLevels();
 
-        checkLevel(users.get(0), false);
-        checkLevel(users.get(1), true);
-        checkLevel(users.get(2), false);
-        checkLevel(users.get(3), true);
-        checkLevel(users.get(4), false);
+        List<User> updated = mockUserDao.getUpdated();
+        assertThat(updated).hasSize(2);
+        checkUserAndLevel(updated.get(0), "joytouch", Level.SILVER);
+        checkUserAndLevel(updated.get(1), "madnite1", Level.GOLD);
 
         List<String> request = mailSender.getRequest();
         assertThat(request).hasSize(2);
         assertThat(request.get(0)).isEqualTo(users.get(1).getEmail());
         assertThat(request.get(1)).isEqualTo(users.get(3).getEmail());
+    }
+
+    private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
+        assertThat(updated.getId()).isEqualTo(expectedId);
+        assertThat(updated.getLevel()).isEqualTo(expectedLevel);
     }
 
     private void checkLevel(User user, boolean isUpgraded) {
@@ -105,7 +115,7 @@ class UserServiceImplTest {
     void upgradeAllOrNothing() {
         UserServiceImpl userServiceImpl = new TestUserServiceImpl(users.get(3).getId());
         userServiceImpl.setUserDao(userDao);
-        userServiceImpl.setUserLevelUpgradePolicy(new NormalUserLevelUpgradePolicy());
+        userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
         userServiceImpl.setMailSender(mailSender);
 
         UserServiceTx userServiceTx = new UserServiceTx();
@@ -140,6 +150,50 @@ class UserServiceImplTest {
 
         public List<String> getRequest() {
             return requests;
+        }
+    }
+
+    static class MockUserDao implements UserDao {
+
+        private List<User> users;
+        private List<User> updated = new ArrayList();
+
+        private MockUserDao(List<User> users) {
+            this.users = users;
+        }
+
+        public List<User> getUpdated() {
+            return updated;
+        }
+
+        @Override
+        public void addUser(User user) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public User getUser(String id) {
+            return null;
+        }
+
+        @Override
+        public void deleteAll() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getCount() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<User> getAll() {
+            return this.users;
+        }
+
+        @Override
+        public void update(User user1) {
+            updated.add(user1);
         }
     }
 }
