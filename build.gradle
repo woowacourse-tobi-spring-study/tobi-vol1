@@ -23,6 +23,8 @@ dependencies {
 
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    implementation 'org.mockito:mockito-junit-jupiter:3.11.1'
     testCompile("org.assertj:assertj-core:3.11.1")
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
