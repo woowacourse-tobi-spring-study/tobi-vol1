@@ -2,11 +2,11 @@ package springbook.service;
 
 import springbook.domain.user.User;
 
-public class TestUserService extends UserService {
+public class TestUserServiceImpl extends UserServiceImpl {
 
     private String id;
 
-    public TestUserService(String id) {
+    public TestUserServiceImpl(String id) {
         this.id = id;
     }
 

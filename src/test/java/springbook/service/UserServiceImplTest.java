@@ -4,18 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,19 +22,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:/test-applicationContext.xml")
-class UserServiceTest {
+class UserServiceImplTest {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private DataSource dataSource;
+    private UserServiceImpl userServiceImpl;
 
     @Autowired
     private UserDao userDao;
 
     @Autowired
     private MailSender mailSender;
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     private List<User> users;
 
@@ -52,12 +53,12 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeLevels() throws SQLException {
+    void upgradeLevels() {
         userDao.deleteAll();
         users.forEach(user -> userDao.addUser(user));
 
         MockMailSender mailSender = new MockMailSender();
-        userService.setMailSender(mailSender);
+        userServiceImpl.setMailSender(mailSender);
 
         userService.upgradeLevels();
 
@@ -102,17 +103,20 @@ class UserServiceTest {
 
     @Test
     void upgradeAllOrNothing() {
-        UserService userService = new TestUserService(users.get(3).getId());
-        userService.setUserDao(userDao);
-        userService.setUserLevelUpgradePolicy(new NormalUserLevelUpgradePolicy());
-        userService.setTransactionManager(new DataSourceTransactionManager(dataSource));
-        userService.setMailSender(mailSender);
+        UserServiceImpl userServiceImpl = new TestUserServiceImpl(users.get(3).getId());
+        userServiceImpl.setUserDao(userDao);
+        userServiceImpl.setUserLevelUpgradePolicy(new NormalUserLevelUpgradePolicy());
+        userServiceImpl.setMailSender(mailSender);
+
+        UserServiceTx userServiceTx = new UserServiceTx();
+        userServiceTx.setUserService(userServiceImpl);
+        userServiceTx.setTransactionManager(transactionManager);
 
         userDao.deleteAll();
         users.forEach(user -> userDao.addUser(user));
 
         try {
-            userService.upgradeLevels();
+            userServiceTx.upgradeLevels();
         } catch (IllegalArgumentException e) {
             System.out.println("hi");
         }
