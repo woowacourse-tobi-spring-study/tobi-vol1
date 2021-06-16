@@ -45,6 +45,11 @@ public class UserDaoJdbc implements UserDao{
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
+    public void update(User user) {
+        this.jdbcTemplate.update("UPDATE users SET name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?",
+                user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
+    }
+
     public List<User> getAll() {
         return this.jdbcTemplate.query("SELECT * FROM users", userRowMapper);
     }
