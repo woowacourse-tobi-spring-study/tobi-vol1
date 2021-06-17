@@ -18,6 +18,7 @@ import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
 
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -123,15 +124,18 @@ class UserServiceTest {
         userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
         userServiceImpl.setMailSender(mailSender);
 
-        UserServiceTx userServiceTx = new UserServiceTx();
-        userServiceTx.setUserService(userServiceImpl);
-        userServiceTx.setTransactionManager(transactionManager);
+        TransactionHandler transactionHandler = new TransactionHandler();
+        transactionHandler.setTarget(userServiceImpl);
+        transactionHandler.setTransactionManager(transactionManager);
+        transactionHandler.setPattern("upgradeLevels");
+
+        UserService userServiceProxy = (UserService) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{UserService.class}, transactionHandler);
 
         userDao.deleteAll();
         users.forEach(user -> userDao.addUser(user));
 
         try {
-            userServiceTx.upgradeLevels();
+            userServiceProxy.upgradeLevels();
         } catch (IllegalArgumentException e) {
             System.out.println("hi");
         }
