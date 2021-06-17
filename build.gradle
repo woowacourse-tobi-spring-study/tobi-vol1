@@ -13,6 +13,7 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-core', version: '5.2.9.RELEASE'
     implementation group: 'org.springframework', name: 'spring-context', version: '5.2.9.RELEASE'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.2.9.RELEASE'
+
     implementation group: 'cglib', name: 'cglib', version: '3.3.0'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.24'
 

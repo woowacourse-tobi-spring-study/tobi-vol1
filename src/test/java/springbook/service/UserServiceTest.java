@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
@@ -19,7 +20,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
-import springbook.factory.TxFactoryBean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -130,7 +130,7 @@ class UserServiceTest {
         userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
         userServiceImpl.setMailSender(mailSender);
 
-        TxFactoryBean txFactoryBean = applicationContext.getBean("&userService", TxFactoryBean.class);
+        ProxyFactoryBean txFactoryBean = applicationContext.getBean("&userService", ProxyFactoryBean.class);
         txFactoryBean.setTarget(userServiceImpl);
 
         UserService userService = (UserService) txFactoryBean.getObject();
