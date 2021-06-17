@@ -9,13 +9,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.TransientDataAccessException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
@@ -35,7 +38,7 @@ import static org.mockito.Mockito.when;
 class UserServiceTest {
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private PlatformTransactionManager transactionManager;
 
     @Autowired
     private UserService userService;
@@ -140,6 +143,31 @@ class UserServiceTest {
     void readOnlyTransactionAttribute() {
         assertThatCode(() -> testUserService.getAll())
                 .isInstanceOf(TransientDataAccessException.class);
+    }
+
+    @Test
+    @Transactional(readOnly = true)
+    void transactionReadonly() {
+        assertThatCode(() -> {
+            userService.deleteAll();
+            userService.add(users.get(0));
+            userService.add(users.get(1));
+        }).isInstanceOf(TransientDataAccessException.class);
+    }
+
+    @Test
+    void transactionSync() {
+        userDao.deleteAll();
+        assertThat(userDao.getCount()).isZero();
+
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        TransactionStatus transaction = transactionManager.getTransaction(definition);
+
+        userDao.addUser(users.get(0));
+        assertThat(userDao.getCount()).isEqualTo(1);
+
+        transactionManager.rollback(transaction);
+        assertThat(userDao.getCount()).isZero();
     }
 
     static class TestUserServiceImpl extends UserServiceImpl {
