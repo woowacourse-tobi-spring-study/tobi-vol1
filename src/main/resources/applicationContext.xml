@@ -6,8 +6,10 @@
     <bean id="userDaoJdbc" class="springbook.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="userService" class="springbook.service.UserServiceTx">
-        <property name="userService" ref="userServiceImpl"/>
+    <bean id="userService" class="springbook.factory.TxFactoryBean">
+        <property name="pattern" value="upgradeLevels"/>
+        <property name="target" ref="userServiceImpl"/>
+        <property name="serviceInterface" value="springbook.service.UserService"/>
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
     <bean id="userServiceImpl" class="springbook.service.UserServiceImpl">
@@ -15,7 +17,6 @@
         <property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
         <property name="mailSender" ref="mailSender"/>
     </bean>
-
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="mail.server.com"/>
     </bean>
@@ -28,5 +29,8 @@
         <property name="url" value="jdbc:mysql://localhost:13306/tobi"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
+    </bean>
+    <bean id="message" class="springbook.factory.MessageFactoryBean">
+        <property name="text" value="Factory Bean"/>
     </bean>
 </beans>
