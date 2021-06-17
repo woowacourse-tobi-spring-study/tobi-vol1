@@ -1,6 +1,10 @@
 package springbook.user.service;
 
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import springbook.user.Level;
 import springbook.user.User;
@@ -29,23 +33,18 @@ public class UserService {
         this.userLevelUpgradePolicy = userLevelUpgradePolicy;
     }
 
-    public void upgradeLevels() throws SQLException {
-        TransactionSynchronizationManager.initSynchronization();
-        Connection c = DataSourceUtils.getConnection(this.dataSource);
-        c.setAutoCommit(false);
+    public void upgradeLevels() {
+        PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             List<User> users = userDao.getAll();
             for (User user : users) {
                 upgradeLevel(user);
             }
-            c.commit();
+            transactionManager.commit(status);
         } catch (Exception e) {
-            c.rollback();
+            transactionManager.rollback(status);
             throw e;
-        } finally {
-            DataSourceUtils.releaseConnection(c, dataSource);
-            TransactionSynchronizationManager.unbindResource(this.dataSource);
-            TransactionSynchronizationManager.clearSynchronization();
         }
     }
 

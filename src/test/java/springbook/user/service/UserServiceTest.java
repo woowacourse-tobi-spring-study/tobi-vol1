@@ -49,7 +49,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeLevels() throws Exception{
+    public void upgradeLevels() {
         userDao.deleteAll();
         for (User user : users) {
             userService.add(user);
@@ -96,7 +96,7 @@ public class UserServiceTest {
         try {
             testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
-        } catch (TestUserServiceException | SQLException e) {
+        } catch (TestUserServiceException e) {
         }
 
         checkLevel(users.get(1), false);
