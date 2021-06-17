@@ -21,7 +21,8 @@ dependencies {
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 
     implementation group: 'org.springframework', name: 'spring-context-support', version: '3.0.7.RELEASE'
-
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.6'
+    
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
