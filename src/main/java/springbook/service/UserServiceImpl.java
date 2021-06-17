@@ -7,6 +7,8 @@ import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -55,5 +57,25 @@ public class UserServiceImpl implements UserService {
             user.setLevel(Level.BASIC);
         }
         userDao.addUser(user);
+    }
+
+    @Override
+    public User get(String id) {
+        return userDao.getUser(id);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userDao.getAll();
+    }
+
+    @Override
+    public void deleteAll() {
+        userDao.deleteAll();
+    }
+
+    @Override
+    public void update(User user) {
+        userDao.update(user);
     }
 }

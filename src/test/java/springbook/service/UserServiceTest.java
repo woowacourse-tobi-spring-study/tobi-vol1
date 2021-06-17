@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.TransientDataAccessException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,12 +45,6 @@ class UserServiceTest {
 
     @Autowired
     private UserDao userDao;
-
-    @Autowired
-    private MailSender mailSender;
-
-    @Autowired
-    private UserLevelUpgradePolicy userLevelUpgradePolicy;
 
     private List<User> users;
 
@@ -140,6 +136,12 @@ class UserServiceTest {
         assertThat(testUserService).isInstanceOf(java.lang.reflect.Proxy.class);
     }
 
+    @Test
+    void readOnlyTransactionAttribute() {
+        assertThatCode(() -> testUserService.getAll())
+                .isInstanceOf(TransientDataAccessException.class);
+    }
+
     static class TestUserServiceImpl extends UserServiceImpl {
 
         private String id = "madnite1";
@@ -150,6 +152,14 @@ class UserServiceTest {
                 throw new IllegalArgumentException();
             }
             super.upgradeLevel(user);
+        }
+
+        @Override
+        public List<User> getAll() {
+            for (User user : super.getAll()) {
+                super.update(user);
+            }
+            return super.getAll();
         }
     }
 }

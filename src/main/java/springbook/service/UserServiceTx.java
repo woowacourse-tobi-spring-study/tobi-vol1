@@ -5,6 +5,8 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import springbook.domain.user.User;
 
+import java.util.List;
+
 public class UserServiceTx implements UserService {
 
     private UserService userService;
@@ -33,5 +35,25 @@ public class UserServiceTx implements UserService {
     @Override
     public void add(User user) {
         userService.add(user);
+    }
+
+    @Override
+    public User get(String id) {
+        return null;
+    }
+
+    @Override
+    public List<User> getAll() {
+        return null;
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public void update(User user) {
+
     }
 }
