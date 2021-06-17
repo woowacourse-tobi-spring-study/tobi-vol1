@@ -1,7 +1,5 @@
 package springbook.user;
 
-import java.util.Objects;
-
 public class User {
     String id;
     String name;
@@ -24,19 +22,6 @@ public class User {
         this.level = level;
         this.login = login;
         this.recommend = recommend;
-    }
-
-    public boolean canUpgradeLevel() {
-        return this.level.canUpgradeLevel(this);
-    }
-
-    public void upgradeLevel() {
-        Level nextLevel = this.level.next();
-        if (nextLevel == null) {
-            throw new IllegalStateException(this.level + "은 업그레이드가 불가능합니다.");
-        } else {
-            this.setLevel(nextLevel);
-        }
     }
 
     public String getId() {
