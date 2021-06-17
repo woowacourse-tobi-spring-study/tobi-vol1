@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
@@ -16,7 +15,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.PlatformTransactionManager;
 import springbook.dao.UserDao;
 import springbook.domain.user.Level;
 import springbook.domain.user.User;
@@ -41,13 +39,13 @@ class UserServiceTest {
     private UserService userService;
 
     @Autowired
+    private UserService testUserService;
+
+    @Autowired
     private UserDao userDao;
 
     @Autowired
     private MailSender mailSender;
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
 
     @Autowired
     private UserLevelUpgradePolicy userLevelUpgradePolicy;
@@ -125,25 +123,33 @@ class UserServiceTest {
     @Test
     @DirtiesContext
     void upgradeAllOrNothing() throws Exception {
-        UserServiceImpl userServiceImpl = new TestUserServiceImpl(users.get(3).getId());
-        userServiceImpl.setUserDao(userDao);
-        userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
-        userServiceImpl.setMailSender(mailSender);
-
-        ProxyFactoryBean txFactoryBean = applicationContext.getBean("&userService", ProxyFactoryBean.class);
-        txFactoryBean.setTarget(userServiceImpl);
-
-        UserService userService = (UserService) txFactoryBean.getObject();
-
         userDao.deleteAll();
         users.forEach(user -> userDao.addUser(user));
 
         try {
-            userService.upgradeLevels();
+            testUserService.upgradeLevels();
         } catch (IllegalArgumentException e) {
             System.out.println("hi");
         }
 
         checkLevel(users.get(1), false);
+    }
+
+    @Test
+    void advisorProxyCreator() {
+        assertThat(testUserService).isInstanceOf(java.lang.reflect.Proxy.class);
+    }
+
+    static class TestUserServiceImpl extends UserServiceImpl {
+
+        private String id = "madnite1";
+
+        @Override
+        protected void upgradeLevel(User user) {
+            if (user.getId().equals(this.id)) {
+                throw new IllegalArgumentException();
+            }
+            super.upgradeLevel(user);
+        }
     }
 }

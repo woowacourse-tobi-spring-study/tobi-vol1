@@ -1,4 +1,4 @@
-package springbook.proxy;
+package springbook.proxy.hello;
 
 public interface Hello {
 

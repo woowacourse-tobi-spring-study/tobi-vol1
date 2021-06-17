@@ -1,4 +1,4 @@
-package springbook.proxy;
+package springbook.proxy.hello;
 
 public class HelloUppercase implements Hello {
 

@@ -3,31 +3,25 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-    <bean id="userDaoJdbc" class="springbook.dao.UserDaoJdbc">
+    <bean id="userDao" class="springbook.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl"/>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+    <bean id="userService" class="springbook.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+        <property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
+        <property name="mailSender" ref="mailSender"/>
     </bean>
     <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
         <property name="advice" ref="transactionAdvice"/>
         <property name="pointcut" ref="transactionPointcut"/>
     </bean>
-    <bean id="transactionAdvice" class="springbook.service.TransactionAdvice">
+    <bean id="transactionAdvice" class="springbook.proxy.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
-    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+    <bean id="transactionPointcut" class="springbook.proxy.NameMatchClassMethodPointcut">
         <property name="mappedName" value="upgrade*"/>
-    </bean>
-    <bean id="userServiceImpl" class="springbook.service.UserServiceImpl">
-        <property name="userDao" ref="userDaoJdbc"/>
-        <property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
-        <property name="mailSender" ref="mailSender"/>
+        <property name="mappedClassName" value="*ServiceImpl"/>
     </bean>
     <bean id="mailSender" class="springbook.service.DummyMailSender"/>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -43,4 +37,5 @@
     <bean id="message" class="springbook.factory.MessageFactoryBean">
         <property name="text" value="Factory Bean"/>
     </bean>
+    <bean id="testUserService" class="springbook.service.UserServiceTest$TestUserServiceImpl" parent="userService"/>
 </beans>

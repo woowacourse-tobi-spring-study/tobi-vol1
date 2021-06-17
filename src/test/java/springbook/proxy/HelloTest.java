@@ -7,6 +7,10 @@ import org.springframework.aop.ClassFilter;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcut;
+import springbook.proxy.hello.Hello;
+import springbook.proxy.hello.HelloTarget;
+import springbook.proxy.hello.HelloUppercase;
+import springbook.proxy.hello.Uppercasehandler;
 
 import java.lang.reflect.Proxy;
 
