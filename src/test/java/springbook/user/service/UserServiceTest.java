@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.Level;
 import springbook.user.User;
 import springbook.user.UserLevelUpgradePolicyNormal;
 import springbook.user.dao.UserDao;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,18 +27,18 @@ public class UserServiceTest {
     @Autowired
     private UserDao userDao;
     @Autowired
-    private DataSource dataSource;
+    private PlatformTransactionManager transactionManager;
 
     private List<User> users;
 
     @BeforeEach
     public void setUp() {
         users = Arrays.asList(
-                new User("bumjin", "박범진", "p1", MIN_LOGCOUNT_FOR_SILVER - 1, 0),
-                new User("joytouch", "강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
-                new User("erwins", "신승한", "p3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1),
-                new User("madnite1", "이상호", "p4", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
-                new User("green", "오민규", "p5", Level.GOLD, Integer.MAX_VALUE, Integer.MAX_VALUE)
+                new User("bumjin", "user1@test.com", "박범진", "p1", MIN_LOGCOUNT_FOR_SILVER - 1, 0),
+                new User("joytouch", "user2@test.com","강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
+                new User("erwins", "user3@test.com", "신승한", "p3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1),
+                new User("madnite1", "user4@test.com","이상호", "p4", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
+                new User("green", "user5@test.com", "오민규", "p5", Level.GOLD, Integer.MAX_VALUE, Integer.MAX_VALUE)
         );
     }
 
@@ -86,7 +85,8 @@ public class UserServiceTest {
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
         testUserService.setUserLevelUpgradePolicyNormal(new UserLevelUpgradePolicyNormal());
-        testUserService.setDataSource(this.dataSource);
+        testUserService.setTransactionManager(transactionManager);
+
 
         userDao.deleteAll();
         for (User user : users) {

@@ -33,9 +33,9 @@ class UserDaoJdbcTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
-        user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
-        user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
+        user1 = new User("gyumee", "user1@test.com", "박성철", "springno1", Level.BASIC, 1, 0);
+        user2 = new User("leegw700", "user2@test.com","이길원", "springno2", Level.SILVER, 55, 10);
+        user3 = new User("bumjin", "user3@test.com", "박범진", "springno3", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -149,6 +149,7 @@ class UserDaoJdbcTest {
 
     private void checkSameUser(User user, User otherUser) {
         assertThat(user.getId()).isEqualTo(otherUser.getId());
+        assertThat(user.getEmail()).isEqualTo(otherUser.getEmail());
         assertThat(user.getName()).isEqualTo(otherUser.getName());
         assertThat(user.getPassword()).isEqualTo(otherUser.getPassword());
         assertThat(user.getLevel()).isEqualTo(otherUser.getLevel());

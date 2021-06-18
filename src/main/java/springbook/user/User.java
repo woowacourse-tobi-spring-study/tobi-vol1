@@ -2,6 +2,7 @@ package springbook.user;
 
 public class User {
     String id;
+    String email;
     String name;
     String password;
     Level level;
@@ -11,12 +12,13 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String password, int login, int recommend) {
-        this(id, name, password, null, login, recommend);
+    public User(String id, String email, String name, String password, int login, int recommend) {
+        this(id, email, name, password, null, login, recommend);
     }
 
-    public User(String id, String name, String password, Level level, int login, int recommend) {
+    public User(String id, String email, String name, String password, Level level, int login, int recommend) {
         this.id = id;
+        this.email = email;
         this.name = name;
         this.password = password;
         this.level = level;
@@ -30,6 +32,14 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getName() {

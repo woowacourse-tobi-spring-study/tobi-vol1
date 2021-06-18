@@ -12,6 +12,7 @@ public class UserDaoJdbc implements UserDao{
     private JdbcTemplate jdbcTemplate;
     private final RowMapper<User> userRowMapper = (rs, rowNum) -> new User(
             rs.getString("id"),
+            rs.getString("email"),
             rs.getString("name"),
             rs.getString("password"),
             Level.valueOf(rs.getInt("level")),
@@ -27,8 +28,8 @@ public class UserDaoJdbc implements UserDao{
     }
 
     public void add(final User user) {
-        String sql = "insert into users(id, name, password, level, login, recommend) values (?,?,?,?,?,?)";
-        jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
+        String sql = "insert into users(id, email, name, password, level, login, recommend) values (?,?,?,?,?,?,?)";
+        jdbcTemplate.update(sql, user.getId(), user.getEmail(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     }
 
     public User get(String id) {
@@ -46,8 +47,8 @@ public class UserDaoJdbc implements UserDao{
     }
 
     public void update(User user) {
-        this.jdbcTemplate.update("UPDATE users SET name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?",
-                user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
+        this.jdbcTemplate.update("UPDATE users SET email = ?, name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?",
+                user.getEmail(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
     }
 
     public List<User> getAll() {
