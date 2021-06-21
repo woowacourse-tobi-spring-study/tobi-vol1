@@ -2,6 +2,7 @@ package springbook.user.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import springbook.user.Level;
 import springbook.user.User;
 
 import javax.sql.DataSource;
@@ -11,8 +12,12 @@ public class UserDaoJdbc implements UserDao{
     private JdbcTemplate jdbcTemplate;
     private final RowMapper<User> userRowMapper = (rs, rowNum) -> new User(
             rs.getString("id"),
+            rs.getString("email"),
             rs.getString("name"),
-            rs.getString("password")
+            rs.getString("password"),
+            Level.valueOf(rs.getInt("level")),
+            rs.getInt("login"),
+            rs.getInt("recommend")
     );
 
     public UserDaoJdbc() {
@@ -23,8 +28,8 @@ public class UserDaoJdbc implements UserDao{
     }
 
     public void add(final User user) {
-        String sql = "insert into users(id, name, password) values (?,?,?)";
-        jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());
+        String sql = "insert into users(id, email, name, password, level, login, recommend) values (?,?,?,?,?,?,?)";
+        jdbcTemplate.update(sql, user.getId(), user.getEmail(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     }
 
     public User get(String id) {
@@ -39,6 +44,11 @@ public class UserDaoJdbc implements UserDao{
     public int getCount() {
         String sql = "select count(*) from users";
         return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public void update(User user) {
+        this.jdbcTemplate.update("UPDATE users SET email = ?, name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?",
+                user.getEmail(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
     }
 
     public List<User> getAll() {

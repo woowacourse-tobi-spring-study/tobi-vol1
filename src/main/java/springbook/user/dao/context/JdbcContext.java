@@ -1,4 +1,4 @@
-package springbook.user.dao;
+package springbook.user.dao.context;
 
 import springbook.user.dao.strategy.statement.StatementStrategy;
 

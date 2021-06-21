@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import springbook.user.Level;
 import springbook.user.User;
 
 import javax.sql.DataSource;
@@ -32,9 +33,9 @@ class UserDaoJdbcTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User("gyumee", "박성철", "springno1");
-        user2 = new User("leegw700", "이길원", "springno2");
-        user3 = new User("bumjin", "박범진", "springno3");
+        user1 = new User("gyumee", "user1@test.com", "박성철", "springno1", Level.BASIC, 1, 0);
+        user2 = new User("leegw700", "user2@test.com","이길원", "springno2", Level.SILVER, 55, 10);
+        user3 = new User("bumjin", "user3@test.com", "박범진", "springno3", Level.GOLD, 100, 40);
     }
 
     @Test
@@ -53,7 +54,6 @@ class UserDaoJdbcTest {
 
     @Test
     public void count() {
-
         userDao.deleteAll();
         assertEquals(userDao.getCount(), 0);
 
@@ -78,12 +78,10 @@ class UserDaoJdbcTest {
         assertEquals(userDao.getCount(), 2);
 
         User userGet1 = userDao.get(user1.getId());
-        assertEquals(userGet1.getName(), user1.getName());
-        assertEquals(userGet1.getPassword(), user1.getPassword());
+        checkSameUser(userGet1, user1);
 
         User userGet2 = userDao.get(user2.getId());
-        assertEquals(userGet2.getName(), user2.getName());
-        assertEquals(userGet2.getPassword(), user2.getPassword());
+        checkSameUser(userGet2, user2);
     }
 
     @Test
@@ -129,7 +127,33 @@ class UserDaoJdbcTest {
         checkSameUser(user2, users3.get(2));
     }
 
+    @Test
+    public void update() {
+        userDao.deleteAll();
+
+        userDao.add(user1);
+        userDao.add(user2);
+
+        user1.setName("오민규");
+        user1.setPassword("springno6");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+        userDao.update(user1);
+
+        User user1Update = userDao.get(user1.getId());
+        checkSameUser(user1, user1Update);
+        User user2Same = userDao.get(user2.getId());
+        checkSameUser(user2, user2Same);
+    }
+
     private void checkSameUser(User user, User otherUser) {
-        assertThat(user).isEqualTo(otherUser);
+        assertThat(user.getId()).isEqualTo(otherUser.getId());
+        assertThat(user.getEmail()).isEqualTo(otherUser.getEmail());
+        assertThat(user.getName()).isEqualTo(otherUser.getName());
+        assertThat(user.getPassword()).isEqualTo(otherUser.getPassword());
+        assertThat(user.getLevel()).isEqualTo(otherUser.getLevel());
+        assertThat(user.getLogin()).isEqualTo(otherUser.getLogin());
+        assertThat(user.getRecommend()).isEqualTo(otherUser.getRecommend());
     }
 }

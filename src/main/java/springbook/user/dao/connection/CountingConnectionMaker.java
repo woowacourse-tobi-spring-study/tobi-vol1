@@ -1,4 +1,6 @@
-package springbook.user.dao;
+package springbook.user.dao.connection;
+
+import springbook.user.dao.ConnectionMaker;
 
 import java.sql.Connection;
 import java.sql.SQLException;
