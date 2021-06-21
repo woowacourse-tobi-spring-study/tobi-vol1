@@ -3,6 +3,10 @@ package springbook.user.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -11,6 +15,7 @@ import springbook.user.User;
 import springbook.user.UserLevelUpgradePolicyNormal;
 import springbook.user.dao.UserDao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +33,8 @@ public class UserServiceTest {
     private UserDao userDao;
     @Autowired
     private PlatformTransactionManager transactionManager;
+    @Autowired
+    private MailSender mailSender;
 
     private List<User> users;
 
@@ -48,11 +55,15 @@ public class UserServiceTest {
     }
 
     @Test
+    @DirtiesContext
     public void upgradeLevels() {
         userDao.deleteAll();
         for (User user : users) {
             userService.add(user);
         }
+
+        MockMailSender mockMailSender = new MockMailSender();
+        userService.setMailSender(mockMailSender);
 
         userService.upgradeLevels();
 
@@ -61,6 +72,11 @@ public class UserServiceTest {
         checkLevel(users.get(2), false);
         checkLevel(users.get(3), true);
         checkLevel(users.get(4), false);
+
+        List<String> request = mockMailSender.getRequests();
+        assertThat(request).hasSize(2);
+        assertThat(request.get(0)).isEqualTo(users.get(1).getEmail());
+        assertThat(request.get(1)).isEqualTo(users.get(3).getEmail());
     }
 
     @Test
@@ -84,9 +100,9 @@ public class UserServiceTest {
     public void upgradeAllOrNothing() {
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
-        testUserService.setUserLevelUpgradePolicyNormal(new UserLevelUpgradePolicyNormal());
+        testUserService.setUserLevelUpgradePolicy(new UserLevelUpgradePolicyNormal());
         testUserService.setTransactionManager(transactionManager);
-
+        testUserService.setMailSender(mailSender);
 
         userDao.deleteAll();
         for (User user : users) {
@@ -122,6 +138,24 @@ public class UserServiceTest {
         protected void upgradeLevel(User user) {
             if (user.getId().equals(this.id)) throw new TestUserServiceException();
             super.upgradeLevel(user);
+        }
+    }
+
+    static class MockMailSender implements MailSender {
+        private final List<String> requests = new ArrayList<>();
+
+        public List<String> getRequests() {
+            return requests;
+        }
+
+        @Override
+        public void send(SimpleMailMessage simpleMessage) throws MailException {
+            requests.add(simpleMessage.getTo()[0]);
+        }
+
+        @Override
+        public void send(SimpleMailMessage... simpleMessages) throws MailException {
+
         }
     }
 }

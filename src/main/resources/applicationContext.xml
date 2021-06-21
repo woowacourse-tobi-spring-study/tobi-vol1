@@ -11,13 +11,19 @@
     <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="userLevelUpgradePolicyNormal" class="springbook.user.UserLevelUpgradePolicyNormal"/>
+    <bean id="userLevelUpgradePolicy" class="springbook.user.UserLevelUpgradePolicyNormal"/>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="mail.server.com"/>
+    </bean>
+
     <bean id="userService" class="springbook.user.service.UserService">
         <property name="userDao" ref="userDao"/>
-        <property name="userLevelUpgradePolicyNormal" ref="userLevelUpgradePolicyNormal"/>
+        <property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/>
         <property name="transactionManager" ref="transactionManager"/>
+        <property name="mailSender" ref="mailSender"/>
     </bean>
 </beans>
