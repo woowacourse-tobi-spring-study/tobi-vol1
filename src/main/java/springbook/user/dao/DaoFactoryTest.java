@@ -5,19 +5,19 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class DaoFactoryTest {
     public static void main(String[] args) {
-        UserDao userDao1 = DaoFactory.userDao();
-        UserDao userDao2 = DaoFactory.userDao();
+        UserDaoJdbc userDaoJdbc1 = DaoFactory.userDao();
+        UserDaoJdbc userDaoJdbc2 = DaoFactory.userDao();
 
-        System.out.println(userDao1);
-        System.out.println(userDao2);
-        System.out.println(userDao1 == userDao2);
+        System.out.println(userDaoJdbc1);
+        System.out.println(userDaoJdbc2);
+        System.out.println(userDaoJdbc1 == userDaoJdbc2);
 
         System.out.println();
 
         ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 
-        UserDao bean1 = context.getBean("userDao", UserDao.class);
-        UserDao bean2 = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc bean1 = context.getBean("userDao", UserDaoJdbc.class);
+        UserDaoJdbc bean2 = context.getBean("userDao", UserDaoJdbc.class);
 
         System.out.println(bean1);
         System.out.println(bean2);

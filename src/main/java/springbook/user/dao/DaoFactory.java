@@ -10,10 +10,10 @@ import javax.sql.DataSource;
 public class DaoFactory {
 
     @Bean
-    public static UserDao userDao() {
-        UserDao userDao = new UserDao();
-        userDao.setDataSource(dataSource());
-        return userDao;
+    public static UserDaoJdbc userDao() {
+        UserDaoJdbc userDaoJdbc = new UserDaoJdbc();
+        userDaoJdbc.setDataSource(dataSource());
+        return userDaoJdbc;
     }
 
     @Bean
