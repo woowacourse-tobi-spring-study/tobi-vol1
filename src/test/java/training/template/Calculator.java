@@ -1,4 +1,4 @@
-package template;
+package training.template;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

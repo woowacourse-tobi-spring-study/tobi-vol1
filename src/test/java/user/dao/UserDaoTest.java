@@ -1,3 +1,6 @@
+package user.dao;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +10,8 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user.dao.UserDao;
+import user.DaoFactoryForTest;
+import user.domain.Level;
 import user.domain.User;
 
 import javax.sql.DataSource;
@@ -21,42 +25,58 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class UserDaoTest {
 
     @Autowired
-    private UserDao dao;
-
+    UserDao dao;
     @Autowired
     DataSource dataSource;
 
+    final User user1 = new User("hello1", "world1", "pw1", Level.BASIC, 1, 0);
+    final User user2 = new User("hello2", "world2", "pw2", Level.SILVER, 55, 10);
+    final User user3 = new User("hello3", "world3", "pw3", Level.GOLD, 100, 40);
+
+    @Before
+    public void setUp() {
+        dao.deleteAll();
+    }
+
     @Test
     public void addAndGet() {
-        dao.deleteAll();
-        assertThat(dao.getCount()).isEqualTo(0);
+        dao.add(user1);
 
-        final String id = "JunitBean";
-        final String name = "JunitBean";
-        final String password = "pw";
-
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setPassword(password);
-
-        dao.add(user);
-
-        final User daoUser = dao.get(user.getId());
-        assertThat(daoUser.getId()).isEqualTo(id);
-        assertThat(daoUser.getName()).isEqualTo(name);
-        assertThat(daoUser.getPassword()).isEqualTo(password);
-
+        final User daoUser = dao.get(user1.getId());
+        checkSameUser(user1, daoUser);
         assertThat(dao.getCount()).isEqualTo(1);
+    }
+
+    private void checkSameUser(User user, User daoUser) {
+        assertThat(daoUser.getId()).isEqualTo(user.getId());
+        assertThat(daoUser.getName()).isEqualTo(user.getName());
+        assertThat(daoUser.getPassword()).isEqualTo(user.getPassword());
+        assertThat(daoUser.getLevel()).isEqualTo(user.getLevel());
+        assertThat(daoUser.getLogin()).isEqualTo(user.getLogin());
+        assertThat(daoUser.getRecommend()).isEqualTo(user.getRecommend());
+    }
+
+    @Test
+    public void updateUser() {
+        dao.add(user1);
+        dao.add(user2);
+
+        user1.setName("바람인가요");
+        user1.setPassword("그대와상관없는~");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+
+        dao.update(user1);
+
+        final User daoUser1 = dao.get(user1.getId());
+        checkSameUser(user1, daoUser1);
+        final User daoUser2 = dao.get(user2.getId());
+        checkSameUser(user2, daoUser2);
     }
 
     @Test
     public void getCount() {
-        dao.deleteAll();
-        final User user1 = new User("hello1", "world1", "pw1");
-        final User user2 = new User("hello2", "world2", "pw2");
-        final User user3 = new User("hello3", "world3", "pw3");
-
         dao.add(user1);
         dao.add(user2);
         dao.add(user3);
@@ -66,35 +86,23 @@ public class UserDaoTest {
 
     @Test
     public void getAll() {
-        dao.deleteAll();
-        final User user1 = new User("hello1", "world1", "pw1");
-        final User user2 = new User("hello2", "world2", "pw2");
-        final User user3 = new User("hello3", "world3", "pw3");
-
         dao.add(user1);
         dao.add(user2);
         dao.add(user3);
 
         final List<User> users = dao.getAll();
-        System.out.println("users = " + users);
         assertThat(users.size()).isEqualTo(3);
     }
 
     @Test(expected = DataAccessException.class)
     public void duplicateKey() {
-        dao.deleteAll();
-
-        final User user1 = new User("hello1", "world1", "pw1");
         dao.add(user1);
         dao.add(user1);
     }
 
     @Test
     public void sqlExceptionTranslate() {
-        dao.deleteAll();
-
         try {
-            final User user1 = new User("hello1", "world1", "pw1");
             dao.add(user1);
             dao.add(user1);
         } catch (DuplicateKeyException e) {

@@ -18,20 +18,38 @@ public class UserDaoJdbc implements UserDao {
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            final User user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-            return user;
+            final String id = rs.getString("id");
+            final String name = rs.getString("name");
+            final String password = rs.getString("password");
+            final int level = rs.getInt("level");
+            final int login = rs.getInt("login");
+            final int recommend = rs.getInt("recommend");
+
+            return new User(id, name, password, level, login, recommend);
         }
     };
 
     @Override
     public void add(User user) {
-        this.jdbcTemplate.update("insert into users (id, name, password) values (?, ?, ?)",
+        this.jdbcTemplate.update("insert into users (id, name, password, level, login, recommend) values (?, ?, ?, ?, ?, ?)",
                 user.getId(),
                 user.getName(),
-                user.getPassword());
+                user.getPassword(),
+                user.getLevel().intValue(),
+                user.getLogin(),
+                user.getRecommend());
+    }
+
+    @Override
+    public void update(User user) {
+        String sql = "update users set name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?";
+        this.jdbcTemplate.update(sql,
+                user.getName(),
+                user.getPassword(),
+                user.getLevel().intValue(),
+                user.getLogin(),
+                user.getRecommend(),
+                user.getId());
     }
 
     @Override

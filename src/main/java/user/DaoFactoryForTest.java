@@ -1,24 +1,45 @@
+package user;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.MailSender;
+import org.springframework.transaction.PlatformTransactionManager;
 import user.connection.ConnectionMaker;
 import user.connection.TestConnectionMaker;
 import user.dao.JdbcContext;
 import user.dao.UserDaoJdbc;
+import user.service.DummyMailSender;
+import user.service.UserService;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
-import java.sql.SQLException;
 
 @Configuration
 public class DaoFactoryForTest {
     @Bean
-    public UserDaoJdbc userDao() throws SQLException {
+    public UserService userService() {
+        return new UserService(userDao(), platformTransactionManager(), mailSender());
+    }
+
+    @Bean
+    public MailSender mailSender() {
+        return new DummyMailSender();
+    }
+
+    @Bean
+    public PlatformTransactionManager platformTransactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Bean
+    public UserDaoJdbc userDao() {
         return new UserDaoJdbc(dataSource());
     }
 
     @Bean
-    public JdbcContext jdbcContext() throws SQLException {
+    public JdbcContext jdbcContext() {
         return new JdbcContext(dataSource());
     }
 
@@ -28,7 +49,7 @@ public class DaoFactoryForTest {
     }
 
     @Bean
-    public DataSource dataSource() throws SQLException {
+    public DataSource dataSource() {
         Driver h2Driver = new org.h2.Driver();
         return new SimpleDriverDataSource(
                 h2Driver,
